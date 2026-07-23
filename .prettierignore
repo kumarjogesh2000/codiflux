@@ -1,0 +1,13 @@
+# Prettier ignore — files/folders Prettier should never format.
+
+# Generated files
+dist/
+.astro/
+node_modules/
+package-lock.json
+
+# Public binary assets
+public/
+
+# Environment files
+.env*

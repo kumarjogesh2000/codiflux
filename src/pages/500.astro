@@ -1,0 +1,51 @@
+---
+/**
+ * 500.astro — Server Error Page
+ *
+ * Architecture note:
+ * This page is only reachable in Astro SSR mode (output: 'server').
+ * For the current static deployment on Hostinger, server errors (500)
+ * are handled by Hostinger's infrastructure — configure a custom error
+ * page in cPanel under "Error Pages" pointing to /500.html after build.
+ *
+ * This component is kept here to:
+ * 1. Document the error handling strategy
+ * 2. Be ready if the project migrates to SSR mode
+ *
+ * See: https://docs.astro.build/en/guides/error-pages/
+ */
+import PageLayout from '@/layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Server Error"
+  description="Something went wrong on our end. We're looking into it."
+  noIndex={true}
+>
+  <section class="container section-padding flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <span class="text-8xl font-black gradient-text" aria-hidden="true">500</span>
+    <h1 class="mt-4 text-2xl font-bold text-[var(--color-text-primary)]">
+      Something went wrong
+    </h1>
+    <p class="mt-3 text-[var(--color-text-secondary)] max-w-md">
+      We're experiencing a temporary issue on our end. Please try again in a few moments.
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row items-center gap-3">
+      <a
+        href="/"
+        class="px-5 py-2.5 rounded-md bg-brand-600 hover:bg-brand-700 text-white
+               text-sm font-medium transition-colors duration-150"
+      >
+        Back to Home
+      </a>
+      <a
+        href="/contact"
+        class="px-5 py-2.5 rounded-md border border-[var(--color-border-base)]
+               text-[var(--color-text-secondary)] hover:text-white hover:border-[var(--color-border-strong)]
+               text-sm font-medium transition-colors duration-150"
+      >
+        Contact Us
+      </a>
+    </div>
+  </section>
+</PageLayout>

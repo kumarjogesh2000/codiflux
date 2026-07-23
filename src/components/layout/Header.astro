@@ -1,0 +1,78 @@
+---
+/**
+ * Header.astro
+ * Site-wide top navigation bar.
+ *
+ * Architecture decisions:
+ * - Static Astro component (no React) — no JS needed for the shell
+ * - Uses CSS for sticky behaviour — no JS scroll listener overhead
+ * - MobileMenu.tsx (React) is client:load only for interactivity
+ * - Logo is inline SVG text for crisp rendering at all sizes
+ */
+import Nav from './Nav.astro';
+import { SITE } from '@/lib/constants';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 inset-x-0 z-50 transition-all duration-300"
+>
+  <!-- Backdrop blur panel -->
+  <div class="glass border-b border-[var(--color-border-subtle)]">
+    <div class="container">
+      <div class="flex h-16 items-center justify-between gap-8">
+
+        <!-- ── Logo ──────────────────────────────────────────── -->
+        <a
+          href="/"
+          class="flex items-center gap-2 font-bold text-lg tracking-tight shrink-0"
+          aria-label={`${SITE.name} — Go to homepage`}
+        >
+          <!-- Wordmark: brand accent + full name -->
+          <span class="gradient-text">{SITE.name}</span>
+        </a>
+
+        <!-- ── Desktop Navigation ────────────────────────────── -->
+        <div class="hidden md:block">
+          <Nav currentPath={currentPath} />
+        </div>
+
+        <!-- ── CTA Button ────────────────────────────────────── -->
+        <div class="flex items-center gap-3">
+          <a
+            href="/contact"
+            class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-md
+                   bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium
+                   transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-brand-500"
+          >
+            Start a Project
+          </a>
+
+          <!-- Mobile menu button — placeholder for MobileMenu.tsx -->
+          <!-- TODO Phase 1: Replace with <MobileMenu client:load /> -->
+          <button
+            id="mobile-menu-toggle"
+            class="md:hidden flex items-center justify-center w-9 h-9 rounded-md
+                   text-[var(--color-text-secondary)] hover:text-white hover:bg-white/5
+                   transition-colors duration-150"
+            aria-label="Toggle mobile menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="6"  x2="21" y2="6"  />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Header offset spacer — prevents content from hiding behind fixed header -->
+<div aria-hidden="true" class="h-16"></div>

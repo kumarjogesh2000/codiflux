@@ -1,0 +1,32 @@
+---
+/**
+ * BaseLayout.astro
+ * The root HTML document wrapper. Every page renders through this layout.
+ *
+ * Responsibilities:
+ * - HTML shell: <html>, <head>, <body>
+ * - Injects SEOHead with all meta tags
+ * - Imports global design system CSS
+ * - Renders page content via <slot />
+ *
+ * DO NOT add visual UI here. This is infrastructure only.
+ * For pages with Header + Footer, use PageLayout.astro instead.
+ */
+import SEOHead from '@/components/seo/SEOHead.astro';
+import type { SEOProps } from '@/lib/seo';
+import '@/styles/global.css';
+
+interface Props extends SEOProps {}
+
+const seoProps = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <SEOHead {...seoProps} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

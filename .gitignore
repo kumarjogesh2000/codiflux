@@ -1,0 +1,40 @@
+# === Build Output ===
+dist/
+
+# === Astro Generated Types ===
+.astro/
+
+# === Dependencies ===
+node_modules/
+
+# === Environment Variables ===
+.env
+.env.local
+.env.production
+.env.*.local
+
+# === Logs ===
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# === Editor Directories ===
+.idea/
+.vscode/extensions.json
+
+# === OS Files ===
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk

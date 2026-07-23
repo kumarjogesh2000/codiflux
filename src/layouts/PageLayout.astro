@@ -1,0 +1,25 @@
+---
+/**
+ * PageLayout.astro
+ * Standard page layout: Header + main content + Footer.
+ * Used by all standard site pages (Home, About, Services, Portfolio, Contact).
+ *
+ * Accepts all SEO props and forwards them to BaseLayout.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import type { SEOProps } from '@/lib/seo';
+
+interface Props extends SEOProps {}
+
+const seoProps = Astro.props;
+---
+
+<BaseLayout {...seoProps}>
+  <Header />
+  <main id="main-content">
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>

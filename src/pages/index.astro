@@ -1,0 +1,22 @@
+---
+/**
+ * index.astro — Home Page (/)
+ *
+ * Phase 0: Layout wired up, sections to be built in Phase 2.
+ * The placeholder below will be replaced section by section.
+ */
+import PageLayout from '@/layouts/PageLayout.astro';
+import { SITE } from '@/lib/constants';
+---
+
+<PageLayout>
+  <!-- Phase 2: Hero, Services, Portfolio, Testimonials, Process, CTA sections go here -->
+  <div class="container section-padding">
+    <h1 class="text-4xl font-bold">
+      <span class="gradient-text">{SITE.name}</span>
+    </h1>
+    <p class="mt-4 text-[var(--color-text-secondary)]">
+      Foundation is live. Phase 1 components coming next.
+    </p>
+  </div>
+</PageLayout>

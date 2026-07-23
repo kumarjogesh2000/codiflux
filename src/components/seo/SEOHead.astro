@@ -1,0 +1,93 @@
+---
+/**
+ * SEOHead.astro
+ * Centralised <head> metadata component.
+ * Used in BaseLayout — all SEO decisions flow through here.
+ *
+ * Every page that uses BaseLayout automatically gets:
+ * - Title tag (formatted via buildTitle)
+ * - Meta description
+ * - Canonical URL
+ * - Open Graph tags
+ * - Twitter Card tags
+ * - Structured data (JSON-LD)
+ * - Preconnect hints for Google Fonts
+ */
+import { SITE } from '@/lib/constants';
+import { buildTitle, buildCanonical, buildOGImage, type SEOProps } from '@/lib/seo';
+
+interface Props extends SEOProps {}
+
+const {
+  title,
+  description = SITE.description,
+  ogImage,
+  ogType = 'website',
+  noIndex = false,
+  canonicalUrl,
+} = Astro.props;
+
+const resolvedTitle     = buildTitle(title);
+const resolvedCanonical = canonicalUrl ?? buildCanonical(Astro.url.pathname);
+const resolvedOGImage   = buildOGImage(ogImage);
+
+// ─── JSON-LD Structured Data ──────────────────────────────────────────────────
+// Organization schema — helps Google understand who you are.
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  email: SITE.email,
+  sameAs: [
+    `https://github.com/codiflux`,
+    `https://linkedin.com/company/codiflux`,
+    `https://x.com/${SITE.twitterHandle}`,
+  ],
+};
+---
+
+<!-- Character encoding — must be first -->
+<meta charset="utf-8" />
+
+<!-- Viewport — responsive web design baseline -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Generator — identifies Astro (optional, common practice) -->
+<meta name="generator" content={Astro.generator} />
+
+<!-- ─── Primary Meta ────────────────────────────────────────── -->
+<title>{resolvedTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={resolvedCanonical} />
+{noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- ─── Open Graph ─────────────────────────────────────────── -->
+<meta property="og:type"        content={ogType} />
+<meta property="og:url"         content={resolvedCanonical} />
+<meta property="og:title"       content={resolvedTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image"       content={resolvedOGImage} />
+<meta property="og:image:width"  content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name"   content={SITE.name} />
+
+<!-- ─── Twitter Card ──────────────────────────────────────── -->
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:site"        content={`@${SITE.twitterHandle}`} />
+<meta name="twitter:title"       content={resolvedTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image"       content={resolvedOGImage} />
+
+<!-- ─── Favicons ───────────────────────────────────────────── -->
+<link rel="icon"             type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon"             type="image/x-icon"  href="/favicon.ico" />
+<link rel="apple-touch-icon"                      href="/apple-touch-icon.png" />
+
+<!-- ─── Font Preconnect ────────────────────────────────────── -->
+<!-- Preconnect establishes connection early — reduces font load latency -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<!-- ─── JSON-LD Structured Data ──────────────────────────── -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />

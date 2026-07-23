@@ -1,0 +1,104 @@
+---
+/**
+ * Footer.astro
+ * Site-wide footer with navigation groups, social links, and legal copy.
+ *
+ * All data is sourced from constants.ts — never hard-code links here.
+ */
+import { SITE, FOOTER_NAV, SOCIAL_LINKS } from '@/lib/constants';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+  id="site-footer"
+  class="border-t border-[var(--color-border-subtle)] bg-[var(--color-surface-raised)]"
+  aria-label="Site footer"
+>
+  <div class="container">
+
+    <!-- ── Upper Footer ──────────────────────────────────────── -->
+    <div class="py-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
+
+      <!-- Brand Column -->
+      <div class="lg:col-span-2 space-y-4">
+        <a href="/" class="font-bold text-xl tracking-tight" aria-label="CodiFlux homepage">
+          <span class="gradient-text">{SITE.name}</span>
+        </a>
+        <p class="text-sm text-[var(--color-text-secondary)] max-w-xs leading-relaxed">
+          {SITE.tagline}. Precision-crafted web experiences for businesses that demand the best.
+        </p>
+        <!-- Social Links -->
+        <div class="flex items-center gap-3" aria-label="Social media links">
+          {SOCIAL_LINKS.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center w-8 h-8 rounded-md
+                     text-[var(--color-text-tertiary)] hover:text-white hover:bg-white/5
+                     transition-colors duration-150"
+              aria-label={`${SITE.name} on ${link.label}`}
+            >
+              <!-- Icon placeholder — will be replaced with actual SVG icons in Phase 1 -->
+              <span class="text-xs font-medium">{link.label.charAt(0)}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Nav Groups -->
+      {FOOTER_NAV.map((group) => (
+        <div class="space-y-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
+            {group.heading}
+          </h3>
+          <ul role="list" class="space-y-2">
+            {group.items.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  target={item.external ? '_blank' : undefined}
+                  rel={item.external ? 'noopener noreferrer' : undefined}
+                  class="text-sm text-[var(--color-text-secondary)] hover:text-white
+                         transition-colors duration-150"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+    </div>
+
+    <!-- ── Lower Footer ──────────────────────────────────────── -->
+    <div class="border-t border-[var(--color-border-subtle)] py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-xs text-[var(--color-text-tertiary)]">
+        &copy; {currentYear} {SITE.name}. All rights reserved.
+      </p>
+      <p class="text-xs text-[var(--color-text-tertiary)]">
+        Built with{' '}
+        <a
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-[var(--color-text-secondary)] transition-colors"
+        >
+          Astro
+        </a>
+        {' '}& deployed on{' '}
+        <a
+          href="https://hostinger.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-[var(--color-text-secondary)] transition-colors"
+        >
+          Hostinger
+        </a>
+      </p>
+    </div>
+
+  </div>
+</footer>

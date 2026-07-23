@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Disallow admin or utility paths if added in future
+# Disallow: /api/
+
+Sitemap: https://codiflux.dev/sitemap-index.xml
