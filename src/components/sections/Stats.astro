@@ -1,0 +1,134 @@
+---
+/**
+ * Stats.astro — Animated key statistics section.
+ *
+ * Numbers animate up on scroll using the Intersection Observer API.
+ * The animation is handled by a small inline script (no React needed).
+ * Stats communicate scale and credibility to potential clients.
+ */
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const stats = [
+  {
+    value:  50,
+    suffix: '+',
+    label:  'Projects delivered',
+    detail: 'across 8+ industries',
+  },
+  {
+    value:  95,
+    suffix: '%',
+    label:  'Client satisfaction',
+    detail: 'based on post-launch surveys',
+  },
+  {
+    value:  4,
+    suffix: '+',
+    label:  'Years of experience',
+    detail: 'building for the modern web',
+  },
+  {
+    value:  100,
+    suffix: '',
+    label:  'Lighthouse score target',
+    detail: 'every build, every time',
+  },
+] as const;
+---
+
+<section
+  id="stats"
+  aria-labelledby="stats-heading"
+  class="section-padding bg-[var(--color-surface-raised)] border-y border-[var(--color-border-subtle)]"
+>
+  <div class="container">
+
+    <div class="mb-12 flex justify-center">
+      <SectionHeader
+        eyebrow="By the Numbers"
+        heading="Results speak"
+        accent="louder."
+        id="stats-heading"
+      />
+    </div>
+
+    <dl class="grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-8">
+      {stats.map((stat, _i) => (
+        <div
+          class="group flex flex-col items-center text-center p-6 rounded-xl
+                 border border-[var(--color-border-subtle)]
+                 bg-[var(--color-surface-base)]
+                 transition-all duration-300 hover:border-brand-800/50"
+        >
+          <dt class="sr-only">{stat.label}</dt>
+          <dd
+            class="text-5xl font-black tracking-tight gradient-text lg:text-6xl"
+            data-stat-target={stat.value}
+            data-stat-suffix={stat.suffix}
+            aria-label={`${stat.value}${stat.suffix} ${stat.label}`}
+          >
+            0{stat.suffix}
+          </dd>
+          <p class="mt-3 text-sm font-semibold text-[var(--color-text-primary)]">
+            {stat.label}
+          </p>
+          <p class="mt-1 text-xs text-[var(--color-text-tertiary)]">
+            {stat.detail}
+          </p>
+        </div>
+      ))}
+    </dl>
+
+  </div>
+</section>
+
+<script>
+  /**
+   * Counts up stat numbers when the section enters the viewport.
+   * Uses IntersectionObserver — no scroll listener overhead.
+   * Respects prefers-reduced-motion.
+   */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animateStat(el: Element) {
+    const target  = parseInt(el.getAttribute('data-stat-target') ?? '0', 10);
+    const suffix  = el.getAttribute('data-stat-suffix') ?? '';
+    const duration = 1600; // ms
+    const start   = performance.now();
+
+    if (prefersReducedMotion) {
+      el.textContent = `${target}${suffix}`;
+      return;
+    }
+
+    function update(now: number) {
+      const elapsed = Math.min(now - start, duration);
+      const progress = 1 - Math.pow(1 - elapsed / duration, 3); // ease-out cubic
+      const current  = Math.round(progress * target);
+      el.textContent = `${current}${suffix}`;
+      if (elapsed < duration) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = `${target}${suffix}`;
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateStat(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  document
+    .querySelectorAll('[data-stat-target]')
+    .forEach((el) => observer.observe(el));
+</script>

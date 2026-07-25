@@ -1,0 +1,124 @@
+---
+/**
+ * TechStack.astro — Technology expertise section.
+ *
+ * An auto-scrolling marquee of technology labels (no external library).
+ * Two rows: one scrolling left, one scrolling right, for visual dynamism.
+ * Fades at edges using a CSS mask gradient.
+ */
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+// Row 1 — Front-end, frameworks, languages
+const row1 = [
+  'React',
+  'TypeScript',
+  'Astro',
+  'Next.js',
+  'Tailwind CSS',
+  'Vite',
+  'HTML5',
+  'CSS3',
+  'JavaScript',
+  'Node.js',
+];
+
+// Row 2 — Platforms, tools, services
+const row2 = [
+  'WordPress',
+  'Shopify',
+  'Wix Studio',
+  'Squarespace',
+  'Git',
+  'GitHub Actions',
+  'Hostinger',
+  'Figma',
+  'SEO',
+  'Core Web Vitals',
+];
+
+// Double each row so the marquee loops seamlessly
+const row1d = [...row1, ...row1];
+const row2d = [...row2, ...row2];
+---
+
+<section
+  id="tech-stack"
+  aria-labelledby="tech-stack-heading"
+  class="section-padding overflow-hidden"
+>
+  <div class="container mb-12">
+    <div class="flex justify-center">
+      <SectionHeader
+        eyebrow="Our Toolkit"
+        heading="Technologies we"
+        accent="master."
+        subtext="We invest deeply in the tools we use — every technology on this list is production-proven in client projects."
+        id="tech-stack-heading"
+      />
+    </div>
+  </div>
+
+  <!-- Marquee wrapper with edge fade mask -->
+  <div
+    class="relative"
+    style="mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);"
+    aria-hidden="true"
+  >
+    <!-- Row 1: scroll left -->
+    <div class="flex overflow-hidden mb-3">
+      <div class="flex gap-3 shrink-0 animate-[marqueeLeft_40s_linear_infinite]">
+        {row1d.map((tech, i) => (
+          <span
+            key={`r1-${i}`}
+            class="flex items-center gap-2 px-4 py-2.5 rounded-lg whitespace-nowrap
+                   text-sm font-medium text-[var(--color-text-secondary)]
+                   bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)]
+                   hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-base)]
+                   transition-colors duration-200 cursor-default"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-500 opacity-60" />
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Row 2: scroll right -->
+    <div class="flex overflow-hidden">
+      <div class="flex gap-3 shrink-0 animate-[marqueeRight_50s_linear_infinite]">
+        {row2d.map((tech, i) => (
+          <span
+            key={`r2-${i}`}
+            class="flex items-center gap-2 px-4 py-2.5 rounded-lg whitespace-nowrap
+                   text-sm font-medium text-[var(--color-text-secondary)]
+                   bg-[var(--color-surface-raised)] border border-[var(--color-border-subtle)]
+                   hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-base)]
+                   transition-colors duration-200 cursor-default"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-accent-500 opacity-60" />
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  @keyframes marqueeLeft {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes marqueeRight {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
+  /* Pause marquee on hover for accessibility */
+  .animate-\[marqueeLeft_40s_linear_infinite\]:hover,
+  .animate-\[marqueeRight_50s_linear_infinite\]:hover {
+    animation-play-state: paused;
+  }
+</style>

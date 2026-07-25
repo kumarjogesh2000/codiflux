@@ -1,0 +1,94 @@
+---
+/**
+ * CTA.astro — Full-width conversion call-to-action section.
+ *
+ * The closing section of the home page — drives visitors to either
+ * start a project or view the portfolio. High-contrast, memorable design.
+ */
+import Button from '@/components/ui/Button.astro';
+import { SITE } from '@/lib/constants';
+---
+
+<section
+  id="cta"
+  aria-label="Call to action"
+  class="section-padding relative overflow-hidden"
+>
+  <!-- Background gradient + grid -->
+  <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+    <div
+      class="absolute inset-0 opacity-[0.06]"
+      style="background-image: linear-gradient(var(--color-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px); background-size: 60px 60px;"
+    ></div>
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px]
+             opacity-20 blur-[100px]
+             bg-radial-[at_50%_0%] from-brand-600 to-transparent"
+    ></div>
+  </div>
+
+  <div class="container relative z-10">
+    <div class="max-w-3xl mx-auto text-center">
+
+      <!-- Eyebrow -->
+      <p class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-brand-400">
+        Ready to build?
+      </p>
+
+      <!-- Headline -->
+      <h2 class="text-4xl font-bold tracking-tight text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
+        Let's build something<br />
+        <span class="gradient-text">worth being proud of.</span>
+      </h2>
+
+      <!-- Sub-copy -->
+      <p class="mt-6 text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-xl mx-auto">
+        Every project starts with a conversation. Tell us what you're building and
+        we'll tell you exactly how we can help — no pressure, no sales script.
+      </p>
+
+      <!-- Action buttons -->
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Button href="/contact" size="lg" id="cta-section-primary">
+          Start a Project
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </Button>
+        <Button href="/portfolio" variant="ghost" size="lg" id="cta-section-portfolio">
+          View Our Portfolio
+        </Button>
+      </div>
+
+      <!-- Trust signals -->
+      <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 text-xs text-[var(--color-text-tertiary)]">
+        {[
+          'Free initial consultation',
+          'No long-term contracts',
+          'Response within 24 hours',
+        ].map((signal) => (
+          <div class="flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500 shrink-0" aria-hidden="true">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
+            <span>{signal}</span>
+          </div>
+        ))}
+      </div>
+
+      <!-- Email direct link -->
+      <p class="mt-8 text-sm text-[var(--color-text-tertiary)]">
+        Prefer email?{' '}
+        <a
+          href={`mailto:${SITE.email}`}
+          class="text-[var(--color-text-secondary)] hover:text-brand-400
+                 transition-colors duration-200 underline underline-offset-2"
+        >
+          {SITE.email}
+        </a>
+      </p>
+
+    </div>
+  </div>
+
+</section>

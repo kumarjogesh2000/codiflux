@@ -2,22 +2,41 @@
 /**
  * index.astro — Home Page (/)
  *
- * Phase 0: Layout wired up, sections to be built in Phase 2.
- * The placeholder below will be replaced section by section.
+ * Assembles all home page sections in order.
+ * Section components own their own markup and data.
+ * This file is pure composition — no logic here.
+ *
+ * Section order (designed for conversion funnel):
+ *   1. Hero          — Attention + value prop
+ *   2. Services      — What we offer
+ *   3. FeaturedProjects — Social proof via work
+ *   4. Stats         — Credibility by numbers
+ *   5. Process       — How we work (reduces friction)
+ *   6. TechStack     — Technical depth signal
+ *   7. Testimonials  — Trust from clients
+ *   8. FAQ           — Objection handling
+ *   9. CTA           — Convert
  */
-import PageLayout from '@/layouts/PageLayout.astro';
-import { SITE } from '@/lib/constants';
+import PageLayout         from '@/layouts/PageLayout.astro';
+import Hero               from '@/components/sections/Hero.astro';
+import Services           from '@/components/sections/Services.astro';
+import FeaturedProjects   from '@/components/sections/FeaturedProjects.astro';
+import Stats              from '@/components/sections/Stats.astro';
+import Process            from '@/components/sections/Process.astro';
+import TechStack          from '@/components/sections/TechStack.astro';
+import Testimonials       from '@/components/sections/Testimonials.astro';
+import FAQ                from '@/components/sections/FAQ.astro';
+import CTA                from '@/components/sections/CTA.astro';
 ---
 
 <PageLayout>
-  <!-- Phase 2: Hero, Services, Portfolio, Testimonials, Process, CTA sections go here -->
-  <div class="section-padding container">
-    <h1 class="text-4xl font-bold">
-      <span class="gradient-text">{SITE.name}</span>
-    </h1>
-    <p class="mt-4 text-[var(--color-text-secondary)]">
-      Foundation is live. Phase 1 components coming next.
-    </p>
-    <p>Deployment Test 26 July 2026 12:15 AM</p>
-  </div>
+  <Hero />
+  <Services />
+  <FeaturedProjects />
+  <Stats />
+  <Process />
+  <TechStack />
+  <Testimonials />
+  <FAQ />
+  <CTA />
 </PageLayout>

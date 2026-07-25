@@ -1,0 +1,118 @@
+---
+/**
+ * Button.astro — Universal button / link primitive.
+ *
+ * Renders as <a> when `href` is supplied, <button> otherwise.
+ * All visual decisions come from design tokens — never raw values.
+ *
+ * Usage:
+ *   <Button href="/contact">Start a Project</Button>
+ *   <Button variant="secondary" size="lg">View Work</Button>
+ *   <Button variant="ghost" type="submit">Send Message</Button>
+ */
+
+type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+type ButtonSize    = 'sm' | 'md' | 'lg';
+
+interface Props {
+  /** Renders as <a> when provided */
+  href?:       string;
+  variant?:    ButtonVariant;
+  size?:       ButtonSize;
+  /** Additional classes — appended after base styles */
+  class?:      string;
+  external?:   boolean;
+  type?:       'button' | 'submit' | 'reset';
+  disabled?:   boolean;
+  id?:         string;
+  'aria-label'?: string;
+}
+
+const {
+  href,
+  variant  = 'primary',
+  size     = 'md',
+  class: className,
+  external = false,
+  type     = 'button',
+  disabled = false,
+  id,
+  'aria-label': ariaLabel,
+} = Astro.props;
+
+// ─── Style Maps ───────────────────────────────────────────────────────────────
+
+const sizes: Record<ButtonSize, string> = {
+  sm: 'px-4 py-1.5 text-sm leading-6',
+  md: 'px-6 py-2.5 text-sm leading-6',
+  lg: 'px-8 py-3.5 text-base leading-7',
+};
+
+const variants: Record<ButtonVariant, string> = {
+  primary: [
+    'bg-brand-600 text-white',
+    'hover:bg-brand-500 active:bg-brand-700',
+    'shadow-[0_0_0px_rgba(124,58,237,0)]',
+    'hover:shadow-[0_0_28px_rgba(124,58,237,0.45)]',
+    'active:scale-[0.97]',
+  ].join(' '),
+
+  secondary: [
+    'bg-transparent text-[var(--color-text-primary)]',
+    'border border-[var(--color-border-base)]',
+    'hover:border-[var(--color-border-strong)]',
+    'hover:bg-[var(--color-surface-overlay)]',
+    'active:scale-[0.97]',
+  ].join(' '),
+
+  ghost: [
+    'bg-transparent text-[var(--color-text-secondary)]',
+    'hover:text-[var(--color-text-primary)]',
+    'hover:bg-white/5',
+    'active:scale-[0.97]',
+  ].join(' '),
+};
+
+const base = [
+  // Layout
+  'inline-flex items-center justify-center gap-2',
+  'whitespace-nowrap font-medium rounded-md',
+  // Transitions — all properties for shadow, colour, transform, border
+  'transition-all duration-200',
+  // Accessibility
+  'focus-visible:outline-none',
+  'focus-visible:ring-2 focus-visible:ring-brand-500',
+  'focus-visible:ring-offset-2',
+  'focus-visible:ring-offset-[var(--color-surface-base)]',
+  // Disabled state
+  'disabled:opacity-50 disabled:pointer-events-none',
+  // Size + variant
+  sizes[size],
+  variants[variant],
+  // Caller overrides
+  className ?? '',
+].join(' ');
+---
+
+{href ? (
+  <a
+    href={href}
+    id={id}
+    class={base}
+    aria-label={ariaLabel}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+  >
+    <slot />
+  </a>
+) : (
+  <button
+    type={type}
+    id={id}
+    class={base}
+    aria-label={ariaLabel}
+    disabled={disabled}
+  >
+    <slot />
+  </button>
+)}

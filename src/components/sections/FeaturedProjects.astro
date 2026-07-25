@@ -1,0 +1,158 @@
+---
+/**
+ * FeaturedProjects.astro — Portfolio showcase on the home page.
+ *
+ * Shows 3 placeholder project cards. Phase 4 will pull these from
+ * the Content Collections (src/content/projects/*.md).
+ * Each card: platform badge, title, description, tech stack, live link.
+ */
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Badge         from '@/components/ui/Badge.astro';
+import Button        from '@/components/ui/Button.astro';
+
+// Placeholder projects — replaced by Content Collections in Phase 4
+const projects = [
+  {
+    id: 'luminary',
+    title: 'Luminary Skincare',
+    tagline: 'Premium Shopify store redesign with 38% conversion uplift',
+    platform: 'Shopify',
+    techStack: ['Shopify', 'Liquid', 'Custom CSS', 'Analytics'],
+    color: 'from-rose-950 to-[var(--color-surface-base)]',
+    accent: '#be185d',
+    emoji: '✦',
+    featured: true,
+  },
+  {
+    id: 'vertex',
+    title: 'Vertex SaaS Platform',
+    tagline: 'Marketing site and documentation hub built with React and Astro',
+    platform: 'React / Astro',
+    techStack: ['React', 'Astro', 'TypeScript', 'Tailwind'],
+    color: 'from-brand-950 to-[var(--color-surface-base)]',
+    accent: '#7c3aed',
+    emoji: '◈',
+    featured: true,
+  },
+  {
+    id: 'anand-dental',
+    title: 'Anand Dental Clinic',
+    tagline: 'Local practice website generating 60%+ more new patient enquiries',
+    platform: 'WordPress',
+    techStack: ['WordPress', 'ACF', 'SEO', 'Performance'],
+    color: 'from-teal-950 to-[var(--color-surface-base)]',
+    accent: '#0d9488',
+    emoji: '◐',
+    featured: true,
+  },
+];
+---
+
+<section
+  id="portfolio"
+  aria-labelledby="portfolio-heading"
+  class="section-padding"
+>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="mb-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+      <SectionHeader
+        eyebrow="Recent Work"
+        heading="Projects we're"
+        accent="proud of."
+        subtext="Every project in our portfolio started with a real business problem."
+        align="left"
+        id="portfolio-heading"
+      />
+      <Button href="/portfolio" variant="secondary" size="sm" class="shrink-0 self-start sm:self-auto">
+        View all work
+      </Button>
+    </div>
+
+    <!-- Project cards grid -->
+    <ul
+      role="list"
+      class="grid grid-cols-1 gap-5 lg:grid-cols-3"
+    >
+      {projects.map((project) => (
+        <li>
+          <article
+            class="group relative h-full flex flex-col rounded-xl overflow-hidden
+                   border border-[var(--color-border-subtle)]
+                   hover:border-[var(--color-border-base)]
+                   transition-all duration-300 hover:-translate-y-1"
+            aria-label={project.title}
+          >
+            <!-- Visual card header -->
+            <div
+              class:list={[
+                'relative flex items-center justify-center',
+                'h-48 p-8 bg-gradient-to-b',
+                project.color,
+              ]}
+            >
+              <!-- Decorative abstract shape -->
+              <div
+                class="text-7xl font-black opacity-[0.15] select-none
+                       transition-transform duration-500 group-hover:scale-110"
+                aria-hidden="true"
+                style={`color: ${project.accent};`}
+              >
+                {project.emoji}
+              </div>
+
+              <!-- Platform badge — positioned top right -->
+              <div class="absolute top-4 right-4">
+                <Badge variant="brand" size="sm">{project.platform}</Badge>
+              </div>
+            </div>
+
+            <!-- Card body -->
+            <div class="flex flex-col flex-1 p-6 bg-[var(--color-surface-raised)]">
+              <h3 class="text-base font-semibold text-[var(--color-text-primary)]">
+                {project.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)] flex-1">
+                {project.tagline}
+              </p>
+
+              <!-- Tech stack -->
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                {project.techStack.map((tech) => (
+                  <Badge variant="default" size="sm">{tech}</Badge>
+                ))}
+              </div>
+
+              <!-- Case study link -->
+              <a
+                href={`/portfolio/${project.id}`}
+                class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold
+                       text-brand-400 hover:text-brand-300
+                       transition-colors duration-200 group/link"
+                aria-label={`View case study for ${project.title}`}
+              >
+                View case study
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="transition-transform duration-200 group-hover/link:translate-x-0.5"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+
+  </div>
+</section>

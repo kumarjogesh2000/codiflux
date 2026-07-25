@@ -1,0 +1,134 @@
+---
+/**
+ * Testimonials.astro — Client testimonials carousel / grid.
+ *
+ * Uses placeholder testimonials (Phase 4 will wire up Content Collections).
+ * Layout: 3-column masonry-style grid on desktop, single column on mobile.
+ */
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+// Placeholder testimonials — will be replaced by Content Collections in Phase 4
+const testimonials = [
+  {
+    id: 't1',
+    name: 'Sarah Mitchell',
+    role: 'Founder & CEO',
+    company: 'Luminary Skincare',
+    quote: 'CodiFlux transformed our Shopify store from a liability into our best-performing sales channel. The attention to detail and performance results were beyond what I expected from any agency.',
+    rating: 5,
+    avatar: 'SM',
+  },
+  {
+    id: 't2',
+    name: 'Marcus Chen',
+    role: 'Head of Marketing',
+    company: 'Vertex SaaS',
+    quote: "Their React expertise is genuine — not just buzzword-deep. We saw a 40% improvement in time-to-interactive after the rebuild. The code is clean, documented, and our in-house team can actually maintain it.",
+    rating: 5,
+    avatar: 'MC',
+  },
+  {
+    id: 't3',
+    name: 'Dr. Priya Anand',
+    role: 'Practice Owner',
+    company: 'Anand Dental Clinic',
+    quote: 'We needed a professional website that reflected the quality of our practice. The WordPress site CodiFlux built has increased our new patient enquiries by over 60%. Worth every penny.',
+    rating: 5,
+    avatar: 'PA',
+  },
+  {
+    id: 't4',
+    name: 'James O\'Brien',
+    role: 'Creative Director',
+    company: 'Studio Fieldwork',
+    quote: "The Wix Studio build they delivered was stunning. They understood our brand without us having to over-explain. Communication was clear throughout and they delivered ahead of schedule.",
+    rating: 5,
+    avatar: 'JO',
+  },
+];
+---
+
+<section
+  id="testimonials"
+  aria-labelledby="testimonials-heading"
+  class="section-padding"
+>
+  <div class="container">
+
+    <div class="mb-14 flex justify-center">
+      <SectionHeader
+        eyebrow="Client Stories"
+        heading="Trusted by teams who"
+        accent="care."
+        subtext="We measure success by what happens after launch — not just the delivery."
+        id="testimonials-heading"
+      />
+    </div>
+
+    <!-- Testimonials grid -->
+    <ul
+      role="list"
+      class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+    >
+      {testimonials.map((t) => (
+        <li>
+          <figure
+            class="h-full flex flex-col p-6 rounded-xl
+                   bg-[var(--color-surface-raised)]
+                   border border-[var(--color-border-subtle)]
+                   hover:border-[var(--color-border-base)]
+                   transition-all duration-300 hover:-translate-y-0.5"
+            aria-label={`Testimonial from ${t.name}, ${t.role} at ${t.company}`}
+          >
+            <!-- Stars -->
+            <div class="flex items-center gap-0.5 mb-4" aria-label={`${t.rating} out of 5 stars`}>
+              {Array.from({ length: t.rating }).map((_star, i) => (
+                <svg
+                  key={i}
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="text-accent-500"
+                  aria-hidden="true"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              ))}
+            </div>
+
+            <!-- Quote -->
+            <blockquote class="flex-1 mb-5">
+              <p class="text-sm leading-relaxed text-[var(--color-text-secondary)] italic">
+                &ldquo;{t.quote}&rdquo;
+              </p>
+            </blockquote>
+
+            <!-- Attribution -->
+            <figcaption class="flex items-center gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
+              <!-- Avatar -->
+              <div
+                class="w-9 h-9 rounded-full flex items-center justify-center shrink-0
+                       bg-brand-900 border border-brand-800/50
+                       text-brand-300 text-xs font-bold"
+                aria-hidden="true"
+              >
+                {t.avatar}
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-[var(--color-text-primary)] leading-none">
+                  {t.name}
+                </p>
+                <p class="mt-0.5 text-xs text-[var(--color-text-tertiary)]">
+                  {t.role}{t.company ? `, ${t.company}` : ''}
+                </p>
+              </div>
+            </figcaption>
+
+          </figure>
+        </li>
+      ))}
+    </ul>
+
+  </div>
+</section>

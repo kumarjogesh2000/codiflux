@@ -1,0 +1,100 @@
+---
+/**
+ * Card.astro — Glass-morphism card shell.
+ *
+ * A surface primitive used for service cards, project cards,
+ * testimonial cards, and any boxed content block.
+ * Hover glow and lift are built in — no extra configuration needed.
+ *
+ * Usage:
+ *   <Card>
+ *     <p>Any content</p>
+ *   </Card>
+ *
+ *   <Card href="/services/wordpress" hover={true} class="p-8">
+ *     ...
+ *   </Card>
+ *
+ *   <Card variant="elevated" hover={false}>
+ *     ...
+ *   </Card>
+ */
+
+type CardVariant = 'default' | 'elevated' | 'flush';
+
+interface Props {
+  /** Renders as <a> with hover effects when href is supplied */
+  href?:     string;
+  variant?:  CardVariant;
+  /** Enable hover lift + glow (auto-enabled when href is present) */
+  hover?:    boolean;
+  class?:    string;
+  id?:       string;
+  external?: boolean;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+}
+
+const {
+  href,
+  variant = 'default',
+  hover: hoverProp,
+  class: className,
+  id,
+  external  = false,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+} = Astro.props;
+
+// Hover is on by default when href is provided
+const hover = hoverProp ?? !!href;
+
+const Tag = href ? 'a' : 'div';
+
+const variants: Record<CardVariant, string> = {
+  default: [
+    'bg-[var(--color-surface-raised)]',
+    'border border-[var(--color-border-subtle)]',
+  ].join(' '),
+
+  elevated: [
+    'bg-[var(--color-surface-overlay)]',
+    'border border-[var(--color-border-base)]',
+    'shadow-[var(--shadow-card)]',
+  ].join(' '),
+
+  flush: [
+    'bg-transparent',
+    'border border-[var(--color-border-subtle)]',
+  ].join(' '),
+};
+
+const hoverClasses = hover
+  ? [
+      'transition-all duration-300',
+      'hover:-translate-y-1',
+      'hover:border-[var(--color-border-strong)]',
+      'hover:shadow-[var(--shadow-card-hover)]',
+      'hover:shadow-brand-800/10',
+    ].join(' ')
+  : '';
+
+const classes = [
+  'rounded-xl block',
+  variants[variant],
+  hoverClasses,
+  className ?? '',
+].join(' ');
+---
+
+<Tag
+  href={href}
+  id={id}
+  class={classes}
+  aria-label={ariaLabel}
+  aria-labelledby={ariaLabelledby}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <slot />
+</Tag>

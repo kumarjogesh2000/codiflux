@@ -1,0 +1,79 @@
+---
+/**
+ * Process.astro — How we work / development process section.
+ *
+ * Renders the 6-step process from PROCESS_STEPS constant.
+ * Desktop: horizontal connected timeline
+ * Mobile: vertical stacked steps
+ */
+import SectionHeader   from '@/components/ui/SectionHeader.astro';
+import { PROCESS_STEPS } from '@/lib/constants';
+---
+
+<section
+  id="process"
+  aria-labelledby="process-heading"
+  class="section-padding"
+>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="mb-16 flex justify-center">
+      <SectionHeader
+        eyebrow="How We Work"
+        heading="A process built for"
+        accent="clarity."
+        subtext="No surprises. No scope creep. Just a structured path from first conversation to a site you're proud of."
+        id="process-heading"
+      />
+    </div>
+
+    <!-- Steps grid -->
+    <ol
+      class="relative grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+      aria-label="Development process steps"
+    >
+      {PROCESS_STEPS.map((step, i) => (
+        <li class="group relative">
+          <div
+            class="h-full p-7 rounded-xl border border-[var(--color-border-subtle)]
+                   bg-[var(--color-surface-raised)]
+                   transition-all duration-300
+                   hover:border-[var(--color-border-base)]
+                   hover:-translate-y-0.5"
+          >
+            <!-- Step number -->
+            <div class="mb-4 flex items-start justify-between">
+              <span
+                class="text-4xl font-black tracking-tight leading-none
+                       text-transparent bg-clip-text"
+                style={`background-image: linear-gradient(135deg, var(--color-brand-${i < 3 ? '400' : '600'}) 0%, var(--color-brand-800) 100%);`}
+                aria-hidden="true"
+              >
+                {step.step}
+              </span>
+              <!-- Connector dot -->
+              <span
+                class="mt-1 w-2 h-2 rounded-full bg-brand-700 opacity-50
+                       group-hover:opacity-100 group-hover:bg-brand-500
+                       transition-all duration-300"
+                aria-hidden="true"
+              ></span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="mb-2.5 text-base font-semibold text-[var(--color-text-primary)]">
+              {step.title}
+            </h3>
+
+            <!-- Description -->
+            <p class="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+              {step.description}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+  </div>
+</section>

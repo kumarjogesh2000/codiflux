@@ -1,0 +1,148 @@
+---
+/**
+ * Hero.astro — Full-viewport hero section for the Home page.
+ *
+ * Features:
+ * - Bold two-line headline with gradient accent
+ * - Supporting tagline
+ * - Dual CTA (primary + secondary)
+ * - Floating gradient orb background (CSS-only, no JS)
+ * - Animated code-like badge element for developer credibility
+ * - Scroll indicator
+ *
+ * All motion is wrapped in prefers-reduced-motion guard in global.css.
+ */
+import Button from '@/components/ui/Button.astro';
+import Badge  from '@/components/ui/Badge.astro';
+---
+
+<section
+  id="hero"
+  aria-label="Hero"
+  class="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden"
+>
+
+  <!-- ── Ambient background orbs (CSS animated) ──────────────────── -->
+  <div aria-hidden="true" class="absolute inset-0 pointer-events-none select-none">
+    <!-- Primary orb — top left -->
+    <div
+      class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full
+             opacity-[0.18] blur-[120px]
+             bg-radial-[at_50%_50%] from-brand-600 to-transparent
+             animate-[heroOrb1_12s_ease-in-out_infinite_alternate]"
+    ></div>
+    <!-- Secondary orb — bottom right -->
+    <div
+      class="absolute -bottom-40 -right-20 w-[500px] h-[500px] rounded-full
+             opacity-[0.12] blur-[100px]
+             bg-radial-[at_50%_50%] from-brand-400 to-transparent
+             animate-[heroOrb2_15s_ease-in-out_infinite_alternate]"
+    ></div>
+    <!-- Accent dot grid overlay -->
+    <div
+      class="absolute inset-0 opacity-[0.035]"
+      style="background-image: radial-gradient(circle, var(--color-text-primary) 1px, transparent 1px); background-size: 40px 40px;"
+    ></div>
+  </div>
+
+  <!-- ── Content ──────────────────────────────────────────────────── -->
+  <div class="container relative z-10 py-20 md:py-32">
+    <div class="max-w-4xl">
+
+      <!-- Eyebrow badge -->
+      <div class="mb-6 animate-fade-up" style="animation-delay: 0ms;">
+        <span
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold
+                 bg-brand-900/50 text-brand-300 border border-brand-800/50"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" aria-hidden="true"></span>
+          Available for new projects
+        </span>
+      </div>
+
+      <!-- Main headline -->
+      <h1
+        class="text-5xl font-bold leading-[1.08] tracking-tight text-[var(--color-text-primary)]
+               sm:text-6xl lg:text-7xl xl:text-8xl
+               animate-fade-up"
+        style="animation-delay: 80ms;"
+      >
+        We craft websites<br />
+        that <span class="gradient-text">perform.</span>
+      </h1>
+
+      <!-- Supporting copy -->
+      <p
+        class="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--color-text-secondary)]
+               sm:text-xl animate-fade-up"
+        style="animation-delay: 160ms;"
+      >
+        CodiFlux builds fast, conversion-focused web experiences for businesses
+        that understand design and engineering are not separate departments.
+      </p>
+
+      <!-- CTAs -->
+      <div
+        class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4
+               animate-fade-up"
+        style="animation-delay: 240ms;"
+      >
+        <Button href="/contact" size="lg" id="hero-cta-primary">
+          Start a Project
+          <!-- Arrow icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </Button>
+        <Button href="/portfolio" variant="secondary" size="lg" id="hero-cta-secondary">
+          See Our Work
+        </Button>
+      </div>
+
+      <!-- Social proof strip -->
+      <div
+        class="mt-14 flex flex-wrap items-center gap-x-6 gap-y-3 animate-fade-up"
+        style="animation-delay: 320ms;"
+      >
+        <span class="text-xs text-[var(--color-text-tertiary)] uppercase tracking-widest font-medium">
+          Trusted by
+        </span>
+        {['Startups', 'Agencies', 'E-commerce', 'SaaS', 'Local Businesses'].map((type) => (
+          <Badge variant="default" size="sm">{type}</Badge>
+        ))}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Scroll indicator ─────────────────────────────────────────── -->
+  <div
+    aria-hidden="true"
+    class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2
+           text-[var(--color-text-tertiary)] animate-[scrollBounce_2s_ease-in-out_infinite]
+           hidden md:flex"
+  >
+    <span class="text-[10px] uppercase tracking-[0.15em] font-medium">Scroll</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+
+</section>
+
+<style>
+  @keyframes heroOrb1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(60px, 40px) scale(1.1); }
+  }
+
+  @keyframes heroOrb2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-40px, -60px) scale(1.15); }
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
+    50%       { transform: translateX(-50%) translateY(6px); opacity: 1; }
+  }
+</style>

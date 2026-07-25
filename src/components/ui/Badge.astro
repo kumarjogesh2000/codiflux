@@ -1,0 +1,70 @@
+---
+/**
+ * Badge.astro — Pill label for categories, tech stack tags, status labels.
+ *
+ * Usage:
+ *   <Badge>WordPress</Badge>
+ *   <Badge variant="brand">Featured</Badge>
+ *   <Badge variant="success" size="sm">Live</Badge>
+ */
+
+type BadgeVariant = 'default' | 'brand' | 'outline' | 'success';
+type BadgeSize    = 'sm' | 'md';
+
+interface Props {
+  variant?: BadgeVariant;
+  size?:    BadgeSize;
+  class?:   string;
+  id?:      string;
+}
+
+const {
+  variant = 'default',
+  size    = 'md',
+  class: className,
+  id,
+} = Astro.props;
+
+const sizes: Record<BadgeSize, string> = {
+  sm: 'px-2 py-0.5 text-[0.6875rem] leading-4',
+  md: 'px-2.5 py-1 text-xs leading-4',
+};
+
+const variants: Record<BadgeVariant, string> = {
+  default: [
+    'bg-[var(--color-surface-overlay)]',
+    'text-[var(--color-text-secondary)]',
+    'border border-[var(--color-border-base)]',
+  ].join(' '),
+
+  brand: [
+    'bg-brand-900/50',
+    'text-brand-300',
+    'border border-brand-800/60',
+  ].join(' '),
+
+  outline: [
+    'bg-transparent',
+    'text-[var(--color-text-secondary)]',
+    'border border-[var(--color-border-base)]',
+  ].join(' '),
+
+  success: [
+    'bg-emerald-950/60',
+    'text-emerald-400',
+    'border border-emerald-900/50',
+  ].join(' '),
+};
+
+const classes = [
+  'inline-flex items-center font-medium rounded-full',
+  'whitespace-nowrap tracking-wide',
+  sizes[size],
+  variants[variant],
+  className ?? '',
+].join(' ');
+---
+
+<span id={id} class={classes}>
+  <slot />
+</span>

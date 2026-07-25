@@ -1,0 +1,119 @@
+---
+/**
+ * FAQ.astro — Frequently asked questions accordion.
+ *
+ * Accessible accordion using <details>/<summary> — no JavaScript required.
+ * CSS provides the smooth expand animation.
+ * Implements FAQ schema-ready structure (JSON-LD added in Phase 4).
+ */
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+const faqs = [
+  {
+    q: 'What types of businesses do you work with?',
+    a: 'We work with businesses of all sizes — from solo founders launching their first product to established agencies needing a white-label development partner. If you need a high-quality web presence, we can help.',
+  },
+  {
+    q: 'Do you only build on certain platforms?',
+    a: 'No. We build on WordPress, Shopify, Wix, Wix Studio, Squarespace, and custom React/Astro stacks. We recommend the right platform for your goals and budget — not the one we happen to prefer.',
+  },
+  {
+    q: 'How long does a typical project take?',
+    a: 'A landing page or small site: 1–2 weeks. A full business website: 3–5 weeks. A complex Shopify store or custom application: 6–10 weeks. Every project starts with a discovery call so we can give you an accurate scope before any commitment.',
+  },
+  {
+    q: 'What does the process look like after we agree to work together?',
+    a: 'Discovery → Strategy & Design → Development → Review & Refinement → Launch → Support. You have a staging environment throughout and are involved in reviews at each milestone. Nothing goes live without your sign-off.',
+  },
+  {
+    q: 'Do you offer ongoing support after launch?',
+    a: 'Yes. We offer monthly maintenance plans that cover updates, monitoring, backups, and performance audits. One-off support requests are also available outside of a retainer.',
+  },
+  {
+    q: 'How much does a website cost?',
+    a: 'Every project is scoped individually. A simple landing page starts around $800. A full business website typically ranges from $2,500 to $8,000. Custom applications are quoted separately. We provide a detailed breakdown before any contract is signed.',
+  },
+  {
+    q: 'Do you help with SEO?',
+    a: 'Every website we build includes technical SEO as standard — proper meta tags, canonical URLs, schema markup, sitemap, robots.txt, Core Web Vitals optimisation, and semantic HTML. Ongoing SEO campaigns are also available as a separate service.',
+  },
+] as const;
+---
+
+<section
+  id="faq"
+  aria-labelledby="faq-heading"
+  class="section-padding bg-[var(--color-surface-raised)]"
+>
+  <div class="container max-w-3xl">
+
+    <div class="mb-12 flex justify-center">
+      <SectionHeader
+        eyebrow="FAQ"
+        heading="Questions we get"
+        accent="a lot."
+        id="faq-heading"
+      />
+    </div>
+
+    <dl class="divide-y divide-[var(--color-border-subtle)]">
+      {faqs.map((faq, i) => (
+        <div class="faq-item">
+          <details class="group" id={`faq-${i}`}>
+            <summary
+              class="flex items-center justify-between gap-4 py-5 cursor-pointer
+                     text-left font-medium text-[var(--color-text-primary)]
+                     hover:text-brand-300 transition-colors duration-200
+                     focus-visible:outline-none focus-visible:text-brand-300
+                     list-none [&::-webkit-details-marker]:hidden"
+            >
+              <dt class="text-sm sm:text-base">{faq.q}</dt>
+              <!-- Chevron icon — rotates when open -->
+              <span
+                class="shrink-0 w-5 h-5 flex items-center justify-center
+                       rounded-md border border-[var(--color-border-base)]
+                       text-[var(--color-text-tertiary)]
+                       group-open:text-brand-400 group-open:border-brand-800/50
+                       group-open:bg-brand-900/30
+                       transition-all duration-200"
+                aria-hidden="true"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="transition-transform duration-200 group-open:rotate-180"
+                >
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </span>
+            </summary>
+            <dd class="pb-5 pr-8 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+              {faq.a}
+            </dd>
+          </details>
+        </div>
+      ))}
+    </dl>
+
+    <!-- Still have questions CTA -->
+    <div class="mt-10 text-center">
+      <p class="text-sm text-[var(--color-text-tertiary)]">
+        Still have questions?{' '}
+        <a
+          href="/contact"
+          class="text-brand-400 hover:text-brand-300 font-medium
+                 transition-colors duration-200 underline underline-offset-2"
+        >
+          We're happy to chat.
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,86 @@
+---
+/**
+ * SectionHeader.astro — Reusable section heading block.
+ *
+ * Renders an eyebrow label, large heading, and optional subtext.
+ * Used at the top of every major section to provide consistent
+ * visual hierarchy and rhythm across the page.
+ *
+ * Usage:
+ *   <SectionHeader
+ *     eyebrow="What We Do"
+ *     heading="Services built for growth"
+ *     subtext="From discovery to deployment, every decision is intentional."
+ *   />
+ *
+ *   <SectionHeader eyebrow="Our Work" heading="Recent projects" align="left" />
+ */
+
+type Align = 'center' | 'left';
+
+interface Props {
+  eyebrow?:   string;
+  heading:    string;
+  /** Optional accent word(s) to render with gradient styling */
+  accent?:    string;
+  subtext?:   string;
+  align?:     Align;
+  class?:     string;
+  /** HTML id for the heading — useful for aria-labelledby */
+  id?:        string;
+  /** Heading level: defaults to h2 for section headings */
+  level?:     2 | 3;
+}
+
+const {
+  eyebrow,
+  heading,
+  accent,
+  subtext,
+  align   = 'center',
+  class: className,
+  id,
+  level   = 2,
+} = Astro.props;
+
+const Tag = `h${level}` as 'h2' | 'h3';
+
+const alignClasses: Record<Align, string> = {
+  center: 'text-center mx-auto',
+  left:   'text-left',
+};
+
+const wrapperClasses = [
+  'max-w-2xl',
+  alignClasses[align],
+  className ?? '',
+].join(' ');
+---
+
+<div class={wrapperClasses}>
+
+  {eyebrow && (
+    <p class="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-brand-400">
+      {eyebrow}
+    </p>
+  )}
+
+  <Tag
+    id={id}
+    class="text-4xl font-bold leading-tight tracking-tight text-[var(--color-text-primary)] sm:text-5xl"
+  >
+    {accent ? (
+      <>
+        {heading}{' '}
+        <span class="gradient-text">{accent}</span>
+      </>
+    ) : heading}
+  </Tag>
+
+  {subtext && (
+    <p class="mt-4 text-lg leading-relaxed text-[var(--color-text-secondary)]">
+      {subtext}
+    </p>
+  )}
+
+</div>
