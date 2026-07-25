@@ -16,7 +16,7 @@ import SEOHead from '@/components/seo/SEOHead.astro';
 import type { SEOProps } from '@/lib/seo';
 import '@/styles/global.css';
 
-interface Props extends SEOProps {}
+type Props = SEOProps;
 
 const seoProps = Astro.props;
 ---

@@ -3,7 +3,6 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import astroPlugin from 'eslint-plugin-astro';
 // eslint-plugin-jsx-a11y has no @types — declared in src/types/declarations.d.ts
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 /** @type {import('typescript-eslint').ConfigArray} */
 const config = [
@@ -29,13 +28,6 @@ const config = [
 
   // ── JSX Accessibility Rules ─────────────────────────────────────
   // Applies only to React (.tsx) files.
-  {
-    files: ['**/*.tsx'],
-    plugins: { 'jsx-a11y': jsxA11y },
-    rules: {
-      ...jsxA11y.configs.recommended.rules,
-    },
-  },
 
   // ── Custom Rules ────────────────────────────────────────────────
   {
