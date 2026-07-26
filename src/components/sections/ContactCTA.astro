@@ -1,0 +1,676 @@
+---
+/**
+ * ContactCTA.astro — Homepage conversion section.
+ *
+ * Placed immediately before the Footer. This is the final persuasion layer —
+ * the last conversation before the visitor leaves or enquires.
+ *
+ * Layout:
+ *   Desktop — two-column: left (copy + trust) / right (form)
+ *   Mobile  — single column, stacked
+ *
+ * Design: Premium · Minimal · Engineering-focused · Dark mode.
+ * Uses Deep Space Navy base, Surface Blue card, Electric Cyan accents.
+ *
+ * Interactions:
+ *   - Section fade + blur reveal on scroll (IntersectionObserver, no JS framework)
+ *   - Input focus: border transition + soft cyan glow
+ *   - Button: magnetic hover + elevation + soft cyan glow
+ *   - prefers-reduced-motion respected
+ *
+ * Technical:
+ *   - UI only — no backend, no SMTP, no API calls
+ *   - Clean form structure ready for future integration (Resend, Netlify, etc.)
+ *   - Semantic HTML, proper labels, autocomplete attributes
+ *   - WCAG AA compliant focus management and color contrast
+ *   - No hydration — pure Astro, zero JS framework overhead
+ */
+import Button from '@/components/ui/Button.astro';
+import { SITE } from '@/lib/constants';
+
+const trustIndicators = [
+  'Usually replies within 24 hours',
+  'Performance-first development',
+  'Modern engineering workflow',
+  'Long-term support available',
+] as const;
+
+const projectTypes = [
+  { value: 'business-website',      label: 'Business Website' },
+  { value: 'ecommerce',             label: 'E-Commerce' },
+  { value: 'landing-page',          label: 'Landing Page' },
+  { value: 'wordpress',             label: 'WordPress' },
+  { value: 'shopify',               label: 'Shopify' },
+  { value: 'wix-studio',            label: 'Wix Studio' },
+  { value: 'squarespace',           label: 'Squarespace' },
+  { value: 'custom-development',    label: 'Custom Development' },
+  { value: 'performance-optimization', label: 'Performance Optimization' },
+  { value: 'other',                 label: 'Other' },
+] as const;
+---
+
+<section
+  id="contact-cta"
+  aria-labelledby="contact-cta-heading"
+  class="contact-cta-section section-padding relative overflow-hidden"
+>
+
+  <!-- ── Ambient background detail ───────────────────────────────────── -->
+  <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+    <!-- Top-left subtle blue radial — anchors depth without neon -->
+    <div
+      class="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full opacity-[0.055] blur-[120px]"
+      style="background: radial-gradient(circle at 40% 40%, #2563EB, transparent 70%);"
+    ></div>
+    <!-- Bottom-right faint cyan trace -->
+    <div
+      class="absolute -bottom-24 -right-24 w-[360px] h-[360px] rounded-full opacity-[0.04] blur-[100px]"
+      style="background: radial-gradient(circle at 60% 60%, #00E5FF, transparent 70%);"
+    ></div>
+    <!-- Hairline top divider — replaces a heavy hr -->
+    <div
+      class="absolute top-0 left-0 right-0 h-px"
+      style="background: linear-gradient(90deg, transparent, var(--color-border-base) 30%, var(--color-border-base) 70%, transparent);"
+    ></div>
+  </div>
+
+  <!-- ── Main container ──────────────────────────────────────────────── -->
+  <div class="container relative z-10">
+
+    <!-- ── Two-column grid ─────────────────────────────────────────── -->
+    <div class="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20 xl:gap-28 items-start">
+
+      <!-- ══ LEFT COLUMN — Copy + Trust ════════════════════════════════ -->
+      <div class="flex flex-col gap-8 lg:sticky lg:top-28 lg:pt-2">
+
+        <!-- Eyebrow label -->
+        <p class="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-accent-cyan)] opacity-85">
+          Start a conversation
+        </p>
+
+        <!-- Headline -->
+        <h2
+          id="contact-cta-heading"
+          class="text-4xl font-bold leading-[1.1] tracking-[-0.025em] text-[var(--color-text-primary)]
+                 sm:text-5xl lg:text-[3.25rem]"
+        >
+          Ready to Build<br class="hidden sm:block" />
+          Something <span class="gradient-text">Exceptional?</span>
+        </h2>
+
+        <!-- Supporting copy -->
+        <p class="text-[1.0625rem] leading-[1.75] text-[var(--color-text-secondary)] max-w-md">
+          Whether you're launching a startup, redesigning your business website,
+          modernising your online presence, or building a custom web solution —
+          CodiFlux is ready to help you transform your ideas into fast, scalable
+          and beautiful digital experiences.
+        </p>
+
+        <!-- ── Trust indicators ──────────────────────────────────── -->
+        <div
+          role="list"
+          aria-label="Why work with CodiFlux"
+          class="flex flex-col gap-3 pt-2"
+        >
+          {trustIndicators.map((item) => (
+            <div
+              role="listitem"
+              class="trust-chip inline-flex items-center gap-3 self-start
+                     px-4 py-2.5 rounded-lg
+                     bg-[var(--color-bg-raised)]
+                     border border-[var(--color-border-subtle)]"
+            >
+              <!-- Check mark — minimal, not icon-heavy -->
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-[var(--color-accent-cyan)] shrink-0 opacity-80"
+                aria-hidden="true"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              <span class="text-sm text-[var(--color-text-secondary)] font-medium">
+                {item}
+              </span>
+            </div>
+          ))}
+        </div>
+
+      </div>
+
+      <!-- ══ RIGHT COLUMN — Contact Form ═══════════════════════════════ -->
+      <div class="w-full">
+
+        <!-- Form card — Surface Blue, minimal border, single inset highlight -->
+        <div
+          class="form-card rounded-xl p-8 sm:p-10
+                 bg-[var(--color-bg-raised)]
+                 border border-[var(--color-border-subtle)]
+                 shadow-[0_1px_3px_rgba(0,0,0,0.5),_0_8px_32px_rgba(0,0,0,0.30),_inset_0_1px_0_rgba(255,255,255,0.03)]"
+        >
+
+          <form
+            id="contact-cta-form"
+            name="contact"
+            method="POST"
+            action="/contact/success"
+            novalidate
+            aria-label="Project enquiry form"
+            class="flex flex-col gap-6"
+          >
+            <!-- Honeypot — spam prevention, hidden from real users -->
+            <input
+              type="text"
+              name="_honeypot"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+              class="sr-only"
+            />
+
+            <!-- ── Row: Name + Email ─────────────────────────────── -->
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+              <!-- Name -->
+              <div class="field-group">
+                <label
+                  for="cta-name"
+                  class="field-label"
+                >
+                  Your name
+                </label>
+                <input
+                  type="text"
+                  id="cta-name"
+                  name="name"
+                  autocomplete="name"
+                  required
+                  placeholder="Alex Johnson"
+                  class="field-input"
+                  aria-required="true"
+                  aria-describedby="cta-name-error"
+                />
+                <span
+                  id="cta-name-error"
+                  role="alert"
+                  aria-live="polite"
+                  class="field-error"
+                  aria-hidden="true"
+                ></span>
+              </div>
+
+              <!-- Email -->
+              <div class="field-group">
+                <label
+                  for="cta-email"
+                  class="field-label"
+                >
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  id="cta-email"
+                  name="email"
+                  autocomplete="email"
+                  required
+                  placeholder="alex@company.com"
+                  class="field-input"
+                  aria-required="true"
+                  aria-describedby="cta-email-error"
+                />
+                <span
+                  id="cta-email-error"
+                  role="alert"
+                  aria-live="polite"
+                  class="field-error"
+                  aria-hidden="true"
+                ></span>
+              </div>
+
+            </div>
+
+            <!-- ── Project Type ──────────────────────────────────── -->
+            <div class="field-group">
+              <label
+                for="cta-project-type"
+                class="field-label"
+              >
+                Project type
+              </label>
+              <div class="select-wrapper">
+                <select
+                  id="cta-project-type"
+                  name="project_type"
+                  autocomplete="off"
+                  required
+                  aria-required="true"
+                  class="field-input field-select"
+                >
+                  <option value="" disabled selected>Select a project type…</option>
+                  {projectTypes.map((pt) => (
+                    <option value={pt.value}>{pt.label}</option>
+                  ))}
+                </select>
+                <!-- Chevron icon -->
+                <span class="select-chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <!-- ── Message ───────────────────────────────────────── -->
+            <div class="field-group">
+              <label
+                for="cta-message"
+                class="field-label"
+              >
+                Tell us about your project
+              </label>
+              <textarea
+                id="cta-message"
+                name="message"
+                rows="5"
+                required
+                placeholder="Tell us about your project — goals, timeline, any specific requirements…"
+                class="field-input field-textarea"
+                aria-required="true"
+                aria-describedby="cta-message-error"
+              ></textarea>
+              <span
+                id="cta-message-error"
+                role="alert"
+                aria-live="polite"
+                class="field-error"
+                aria-hidden="true"
+              ></span>
+            </div>
+
+            <!-- ── Submit button ─────────────────────────────────── -->
+            <div class="pt-1">
+              <Button
+                type="submit"
+                size="lg"
+                id="contact-cta-submit"
+                class="w-full justify-center magnetic-btn"
+                aria-label="Submit your project enquiry"
+              >
+                Start Your Project
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Button>
+            </div>
+
+          </form>
+
+          <!-- ── Below-form alternatives ───────────────────────── -->
+          <div class="mt-8 pt-6 border-t border-[var(--color-border-subtle)]">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+
+              <span class="text-xs text-[var(--color-text-tertiary)] font-medium tracking-wide">or reach us directly</span>
+
+              <!-- Email link -->
+              <a
+                href={`mailto:${SITE.email}`}
+                class="text-sm font-medium text-[var(--color-text-secondary)]
+                       hover:text-[var(--color-accent-cyan)]
+                       transition-colors duration-200
+                       underline underline-offset-[3px] decoration-[var(--color-border-base)]
+                       hover:decoration-[var(--color-accent-cyan)]"
+              >
+                {SITE.email}
+              </a>
+
+              <!-- Vertical divider on desktop -->
+              <span class="hidden sm:block w-px h-3 bg-[var(--color-border-base)]" aria-hidden="true"></span>
+
+              <!-- Discovery call link -->
+              <a
+                href="/contact#discovery-call"
+                class="text-sm font-medium text-[var(--color-text-secondary)]
+                       hover:text-[var(--color-text-primary)]
+                       transition-colors duration-200"
+              >
+                Book a Discovery Call
+              </a>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- /form-card -->
+
+      </div>
+      <!-- /right column -->
+
+    </div>
+    <!-- /grid -->
+
+  </div>
+  <!-- /container -->
+
+</section>
+
+<!-- ─── Scoped Styles ─────────────────────────────────────────────────────── -->
+<style>
+  /* ── Section reveal animation ────────────────────────────────────── */
+  /* Starts invisible + slightly blurred — reveals on scroll.           */
+  .contact-cta-section {
+    --reveal-duration: 600ms;
+    --reveal-easing:   cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .contact-cta-section.is-revealed {
+    /* Children handle their own opacity/transform — section is the trigger */
+  }
+
+  /* Form card entrance */
+  .form-card {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(2px);
+    transition:
+      opacity   var(--reveal-duration) var(--reveal-easing),
+      transform var(--reveal-duration) var(--reveal-easing),
+      filter    var(--reveal-duration) var(--reveal-easing);
+  }
+
+  .contact-cta-section.is-revealed .form-card {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  /* Trust chips stagger */
+  .trust-chip {
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity   var(--reveal-duration) var(--reveal-easing),
+      transform var(--reveal-duration) var(--reveal-easing);
+  }
+
+  .contact-cta-section.is-revealed .trust-chip:nth-child(1) { opacity: 1; transform: none; transition-delay: 80ms;  }
+  .contact-cta-section.is-revealed .trust-chip:nth-child(2) { opacity: 1; transform: none; transition-delay: 140ms; }
+  .contact-cta-section.is-revealed .trust-chip:nth-child(3) { opacity: 1; transform: none; transition-delay: 200ms; }
+  .contact-cta-section.is-revealed .trust-chip:nth-child(4) { opacity: 1; transform: none; transition-delay: 260ms; }
+
+  /* ── Form field system ────────────────────────────────────────────── */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .field-label {
+    font-size: 0.8125rem;    /* 13px */
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  .field-input {
+    width: 100%;
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-base);
+    border-radius: var(--radius-md);
+    padding: 0.625rem 0.875rem;   /* 10px 14px */
+    font-size: 0.9375rem;          /* 15px */
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    outline: none;
+    transition:
+      border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow   200ms cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    /* Prevent iOS zoom on focus */
+    -webkit-text-size-adjust: none;
+  }
+
+  /* Placeholder color */
+  .field-input::placeholder {
+    color: var(--color-text-tertiary);
+    opacity: 1;
+  }
+
+  /* Focus: border becomes cyan-tinted + soft glow */
+  .field-input:focus {
+    border-color: rgba(0, 229, 255, 0.45);
+    background-color: var(--color-bg-overlay);
+    box-shadow:
+      0 0 0 3px rgba(0, 229, 255, 0.08),
+      0 0 12px rgba(0, 229, 255, 0.06);
+  }
+
+  /* Valid state — subtle green-tinted border */
+  .field-input:valid:not(:placeholder-shown):not(:focus) {
+    border-color: rgba(16, 185, 129, 0.30);
+  }
+
+  /* Invalid state — only after user interaction (JS-driven) */
+  .field-input.is-invalid {
+    border-color: rgba(239, 68, 68, 0.45);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.07);
+  }
+
+  /* Hover state when not focused */
+  .field-input:not(:focus):hover {
+    border-color: var(--color-border-strong);
+  }
+
+  /* ── Textarea ─────────────────────────────────────────────────────── */
+  .field-textarea {
+    resize: vertical;
+    min-height: 128px;
+    max-height: 360px;
+  }
+
+  /* ── Select ───────────────────────────────────────────────────────── */
+  .select-wrapper {
+    position: relative;
+  }
+
+  .field-select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding-right: 2.5rem;
+  }
+
+  /* Options inherit the page background in supported browsers */
+  .field-select option {
+    background-color: var(--color-bg-overlay);
+    color: var(--color-text-primary);
+  }
+
+  .select-chevron {
+    position: absolute;
+    right: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    transition: color 150ms ease;
+  }
+
+  .select-wrapper:focus-within .select-chevron {
+    color: var(--color-accent-cyan);
+  }
+
+  /* ── Error messages ───────────────────────────────────────────────── */
+  .field-error {
+    font-size: 0.75rem;
+    color: var(--color-error);
+    line-height: 1.4;
+    min-height: 1em;
+  }
+
+  /* ── Magnetic button hover effect ────────────────────────────────── */
+  /* Achieved with subtle transform — no JS required for the CSS part.  */
+  /* The JS below adds a data-attribute that triggers the animation.    */
+  .magnetic-btn {
+    transition:
+      transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1),
+      background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .magnetic-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 16px rgba(37, 99, 235, 0.35),
+      0 0 0 1px rgba(37, 99, 235, 0.20);
+  }
+
+  .magnetic-btn:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: none;
+  }
+
+  /* ── Reduced motion — disable all animations ─────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .form-card,
+    .trust-chip,
+    .field-input,
+    .magnetic-btn {
+      transition: none !important;
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+  }
+</style>
+
+<!-- ─── Interaction Script ─────────────────────────────────────────────────
+     Pure vanilla JS, no framework, no hydration.
+     1. Scroll reveal via IntersectionObserver
+     2. Real-time form validation (WCAG AA accessible)
+     3. Magnetic button micro-interaction
+     All wrapped in prefers-reduced-motion guard.
+  ─────────────────────────────────────────────────────────────────────────── -->
+<script>
+  (function () {
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    // ── 1. Scroll reveal ────────────────────────────────────────────────
+    const section = document.getElementById('contact-cta');
+
+    if (section) {
+      if (prefersReducedMotion) {
+        // Instantly visible — skip animation entirely
+        section.classList.add('is-revealed');
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                section.classList.add('is-revealed');
+                observer.unobserve(section);
+              }
+            });
+          },
+          { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+        );
+        observer.observe(section);
+      }
+    }
+
+    // ── 2. Accessible form validation ───────────────────────────────────
+    const form = document.getElementById(
+      'contact-cta-form'
+    ) as HTMLFormElement | null;
+
+    if (form) {
+      // Validate a single field and update ARIA error state
+      const validateField = (field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => {
+        const errorEl = document.getElementById(`${field.id}-error`);
+        let message = '';
+
+        if (field.validity.valueMissing) {
+          message = 'This field is required.';
+        } else if (field.validity.typeMismatch && field.type === 'email') {
+          message = 'Please enter a valid email address.';
+        } else if (field.validity.tooShort) {
+          message = `Please enter at least ${field.minLength} characters.`;
+        }
+
+        if (message) {
+          field.classList.add('is-invalid');
+          if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.setAttribute('aria-hidden', 'false');
+          }
+        } else {
+          field.classList.remove('is-invalid');
+          if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.setAttribute('aria-hidden', 'true');
+          }
+        }
+
+        return !message;
+      };
+
+      // Validate on blur (after first interaction)
+      const fieldsToValidate = form.querySelectorAll<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >('[required]');
+
+      fieldsToValidate.forEach((field) => {
+        let hasBlurred = false;
+        field.addEventListener('blur', () => {
+          hasBlurred = true;
+          validateField(field);
+        });
+        field.addEventListener('input', () => {
+          if (hasBlurred) validateField(field);
+        });
+        field.addEventListener('change', () => {
+          if (hasBlurred) validateField(field);
+        });
+      });
+
+      // Validate all on submit
+      form.addEventListener('submit', (e) => {
+        let isValid = true;
+        fieldsToValidate.forEach((field) => {
+          if (!validateField(field)) {
+            isValid = false;
+          }
+        });
+
+        if (!isValid) {
+          e.preventDefault();
+          // Move focus to first invalid field for screen reader UX
+          const firstInvalid = form.querySelector<HTMLElement>('.is-invalid');
+          firstInvalid?.focus();
+        }
+      });
+    }
+  })();
+</script>

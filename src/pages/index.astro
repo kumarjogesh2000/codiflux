@@ -7,15 +7,16 @@
  * This file is pure composition — no logic here.
  *
  * Section order (designed for conversion funnel):
- *   1. Hero          — Attention + value prop
- *   2. Services      — What we offer
+ *   1. Hero             — Attention + value prop
+ *   2. Services         — What we offer
  *   3. FeaturedProjects — Social proof via work
- *   4. Stats         — Credibility by numbers
- *   5. Process       — How we work (reduces friction)
- *   6. TechStack     — Technical depth signal
- *   7. Testimonials  — Trust from clients
- *   8. FAQ           — Objection handling
- *   9. CTA           — Convert
+ *   4. Stats            — Credibility by numbers
+ *   5. Process          — How we work (reduces friction)
+ *   6. TechStack        — Technical depth signal
+ *   7. Testimonials     — Trust from clients
+ *   8. FAQ              — Objection handling
+ *   9. CTA              — Mid-page conversion nudge
+ *  10. ContactCTA       — Final conversion: form before footer
  */
 import PageLayout         from '@/layouts/PageLayout.astro';
 import Hero               from '@/components/sections/Hero.astro';
@@ -27,6 +28,7 @@ import TechStack          from '@/components/sections/TechStack.astro';
 import Testimonials       from '@/components/sections/Testimonials.astro';
 import FAQ                from '@/components/sections/FAQ.astro';
 import CTA                from '@/components/sections/CTA.astro';
+import ContactCTA         from '@/components/sections/ContactCTA.astro';
 ---
 
 <PageLayout>
@@ -39,4 +41,6 @@ import CTA                from '@/components/sections/CTA.astro';
   <Testimonials />
   <FAQ />
   <CTA />
+  <ContactCTA />
 </PageLayout>
+
