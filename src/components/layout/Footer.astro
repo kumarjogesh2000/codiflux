@@ -21,9 +21,24 @@ const currentYear = new Date().getFullYear();
     <div class="py-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
 
       <!-- Brand Column -->
-      <div class="lg:col-span-2 space-y-4">
-        <a href="/" class="font-bold text-xl tracking-tight" aria-label="CodiFlux homepage">
-          <span class="gradient-text">{SITE.name}</span>
+      <div class="lg:col-span-2 space-y-5">
+        <a
+          href="/"
+          class="inline-block focus-visible:outline-none focus-visible:ring-2
+                 focus-visible:ring-[var(--color-accent-blue)] rounded-md
+                 transition-opacity duration-200 hover:opacity-85"
+          aria-label="CodiFlux homepage"
+        >
+          <!-- Horizontal banner logo — reads cleanly on dark Surface Blue bg -->
+          <img
+            src="/images/logo-banner.png"
+            alt="CodiFlux — Web & Software Solutions"
+            width="200"
+            height="57"
+            class="h-12 w-auto object-contain"
+            loading="lazy"
+            decoding="async"
+          />
         </a>
         <p class="text-sm text-[var(--color-text-secondary)] max-w-xs leading-relaxed">
           {SITE.tagline}. Precision-crafted web experiences for businesses that demand the best.

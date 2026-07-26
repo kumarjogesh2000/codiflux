@@ -34,12 +34,27 @@ const currentPath = Astro.url.pathname;
         <!-- ── Logo ──────────────────────────────────────────── -->
         <a
           href="/"
-          class="flex items-center gap-2 font-bold text-xl tracking-[-0.02em] shrink-0
+          class="flex items-center gap-2.5 shrink-0 group
                  focus-visible:outline-none focus-visible:ring-2
-                 focus-visible:ring-[var(--color-accent-blue)] rounded-sm"
+                 focus-visible:ring-[var(--color-accent-blue)] rounded-sm
+                 transition-opacity duration-200 hover:opacity-90"
           aria-label={`${SITE.name} — Go to homepage`}
         >
-          <span class="gradient-text">{SITE.name}</span>
+          <!-- Circular logo mark -->
+          <img
+            src="/images/logo-mark.png"
+            alt=""
+            aria-hidden="true"
+            width="36"
+            height="36"
+            class="h-9 w-9 rounded-full object-cover shrink-0"
+            loading="eager"
+            decoding="async"
+          />
+          <!-- Site name — hidden on xs, visible from sm -->
+          <span class="hidden sm:block font-bold text-lg tracking-[-0.02em] gradient-text leading-none">
+            {SITE.name}
+          </span>
         </a>
 
         <!-- ── Desktop Navigation ────────────────────────────── -->
