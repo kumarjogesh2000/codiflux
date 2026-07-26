@@ -18,12 +18,16 @@
  *   - Button: magnetic hover + elevation + soft cyan glow
  *   - prefers-reduced-motion respected
  *
+ * Backend:
+ *   - Submits to public/api/contact.php via fetch() — no page reload.
+ *   - PHP validates + sanitizes all fields server-side.
+ *   - Returns JSON { success, message } or { success, errors }.
+ *   - Recipient email configured in public/api/contact.php (RECIPIENT_EMAIL).
+ *
  * Technical:
- *   - UI only — no backend, no SMTP, no API calls
- *   - Clean form structure ready for future integration (Resend, Netlify, etc.)
- *   - Semantic HTML, proper labels, autocomplete attributes
- *   - WCAG AA compliant focus management and color contrast
- *   - No hydration — pure Astro, zero JS framework overhead
+ *   - Semantic HTML, proper labels, autocomplete attributes.
+ *   - WCAG AA compliant: aria-live banners, focus management, inline errors.
+ *   - No hydration — pure Astro, zero JS framework overhead.
  */
 import Button from '@/components/ui/Button.astro';
 import { SITE } from '@/lib/constants';
@@ -155,6 +159,16 @@ const projectTypes = [
                  shadow-[0_1px_3px_rgba(0,0,0,0.5),_0_8px_32px_rgba(0,0,0,0.30),_inset_0_1px_0_rgba(255,255,255,0.03)]"
         >
 
+          <!-- ── Status banner — hidden until JS sets state ────── -->
+          <div
+            id="contact-cta-status"
+            role="status"
+            aria-live="assertive"
+            aria-atomic="true"
+            class="status-banner"
+            hidden
+          ></div>
+
           <form
             id="contact-cta-form"
             name="contact"
@@ -191,6 +205,8 @@ const projectTypes = [
                   name="name"
                   autocomplete="name"
                   required
+                  minlength="2"
+                  maxlength="100"
                   placeholder="Alex Johnson"
                   class="field-input"
                   aria-required="true"
@@ -279,6 +295,8 @@ const projectTypes = [
                 name="message"
                 rows="5"
                 required
+                minlength="20"
+                maxlength="5000"
                 placeholder="Tell us about your project — goals, timeline, any specific requirements…"
                 class="field-input field-textarea"
                 aria-required="true"
@@ -528,25 +546,70 @@ const projectTypes = [
   }
 
   /* ── Magnetic button hover effect ────────────────────────────────── */
-  /* Achieved with subtle transform — no JS required for the CSS part.  */
-  /* The JS below adds a data-attribute that triggers the animation.    */
   .magnetic-btn {
+    position: relative;
     transition:
       transform 200ms cubic-bezier(0.32, 0.72, 0, 1),
       box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1),
-      background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 150ms ease;
   }
 
-  .magnetic-btn:hover {
+  .magnetic-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow:
       0 4px 16px rgba(37, 99, 235, 0.35),
       0 0 0 1px rgba(37, 99, 235, 0.20);
   }
 
-  .magnetic-btn:active {
+  .magnetic-btn:active:not(:disabled) {
     transform: translateY(0) scale(0.97);
     box-shadow: none;
+  }
+
+  /* ── Disabled / loading state ────────────────────────────────────── */
+  .magnetic-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Inline spinner inside the button */
+  .btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.30);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 650ms linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Status banner ───────────────────────────────────────────────── */
+  .status-banner {
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .status-banner[data-state="success"] {
+    background-color: rgba(16, 185, 129, 0.10);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #6ee7b7;   /* green-300 — readable on dark bg */
+  }
+
+  .status-banner[data-state="error"] {
+    background-color: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;   /* red-300 — readable on dark bg */
   }
 
   /* ── Reduced motion — disable all animations ─────────────────────── */
@@ -561,15 +624,24 @@ const projectTypes = [
       transform: none !important;
       filter: none !important;
     }
+
+    .btn-spinner {
+      animation: none !important;
+    }
   }
 </style>
 
 <!-- ─── Interaction Script ─────────────────────────────────────────────────
-     Pure vanilla JS, no framework, no hydration.
-     1. Scroll reveal via IntersectionObserver
-     2. Real-time form validation (WCAG AA accessible)
-     3. Magnetic button micro-interaction
-     All wrapped in prefers-reduced-motion guard.
+     Pure vanilla JS — no framework, no hydration overhead.
+
+     Responsibilities:
+       1. Scroll reveal via IntersectionObserver
+       2. Real-time client-side validation (blur/input/change events)
+       3. Async form submission via fetch() → public/api/contact.php
+       4. Loading / success / error UI states
+       5. Form reset after successful submission
+
+     All motion wrapped in prefers-reduced-motion guard.
   ─────────────────────────────────────────────────────────────────────────── -->
 <script>
   (function () {
@@ -577,12 +649,11 @@ const projectTypes = [
       '(prefers-reduced-motion: reduce)'
     ).matches;
 
-    // ── 1. Scroll reveal ────────────────────────────────────────────────
+    // ── 1. Scroll reveal ─────────────────────────────────────────────────
     const section = document.getElementById('contact-cta');
 
     if (section) {
       if (prefersReducedMotion) {
-        // Instantly visible — skip animation entirely
         section.classList.add('is-revealed');
       } else {
         const observer = new IntersectionObserver(
@@ -590,7 +661,7 @@ const projectTypes = [
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 section.classList.add('is-revealed');
-                observer.unobserve(section);
+                observer.unobserve(section as Element);
               }
             });
           },
@@ -600,77 +671,213 @@ const projectTypes = [
       }
     }
 
-    // ── 2. Accessible form validation ───────────────────────────────────
-    const form = document.getElementById(
-      'contact-cta-form'
-    ) as HTMLFormElement | null;
+    // ── 2. Form wiring ───────────────────────────────────────────────────
+    const form       = document.getElementById('contact-cta-form')    as HTMLFormElement | null;
+    const submitBtn  = document.getElementById('contact-cta-submit')  as HTMLButtonElement | null;
+    const statusEl   = document.getElementById('contact-cta-status')  as HTMLElement | null;
 
-    if (form) {
-      // Validate a single field and update ARIA error state
-      const validateField = (field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => {
-        const errorEl = document.getElementById(`${field.id}-error`);
-        let message = '';
+    if (!form || !submitBtn || !statusEl) return;
 
-        if (field.validity.valueMissing) {
-          message = 'This field is required.';
-        } else if (field.validity.typeMismatch && field.type === 'email') {
-          message = 'Please enter a valid email address.';
-        } else if (field.validity.tooShort) {
-          message = `Please enter at least ${field.minLength} characters.`;
+    // Original button label HTML — restored after loading state
+    const originalBtnHTML = submitBtn.innerHTML;
+
+    // ── Validation helpers ──────────────────────────────────────────────
+
+    type ValidatableField = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+    const getErrorEl = (field: ValidatableField): HTMLElement | null =>
+      document.getElementById(`${field.id}-error`);
+
+    const setFieldError = (field: ValidatableField, message: string): void => {
+      const errorEl = getErrorEl(field);
+      field.classList.add('is-invalid');
+      field.setAttribute('aria-invalid', 'true');
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.setAttribute('aria-hidden', 'false');
+      }
+    };
+
+    const clearFieldError = (field: ValidatableField): void => {
+      const errorEl = getErrorEl(field);
+      field.classList.remove('is-invalid');
+      field.setAttribute('aria-invalid', 'false');
+      if (errorEl) {
+        errorEl.textContent = '';
+        errorEl.setAttribute('aria-hidden', 'true');
+      }
+    };
+
+    const validateField = (field: ValidatableField): boolean => {
+      const value = field.value.trim();
+
+      if (field.hasAttribute('required') && value === '') {
+        setFieldError(field, 'This field is required.');
+        return false;
+      }
+
+      if (field.type === 'email' && value !== '') {
+        // RFC 5322-simplified check
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (!emailRe.test(value)) {
+          setFieldError(field, 'Please enter a valid email address.');
+          return false;
         }
+      }
 
-        if (message) {
-          field.classList.add('is-invalid');
-          if (errorEl) {
-            errorEl.textContent = message;
-            errorEl.setAttribute('aria-hidden', 'false');
-          }
-        } else {
-          field.classList.remove('is-invalid');
-          if (errorEl) {
-            errorEl.textContent = '';
-            errorEl.setAttribute('aria-hidden', 'true');
-          }
-        }
+      const minLen = parseInt(field.getAttribute('minlength') ?? '0', 10);
+      if (minLen > 0 && value.length < minLen) {
+        setFieldError(field, `Please enter at least ${minLen} characters.`);
+        return false;
+      }
 
-        return !message;
-      };
+      clearFieldError(field);
+      return true;
+    };
 
-      // Validate on blur (after first interaction)
-      const fieldsToValidate = form.querySelectorAll<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >('[required]');
+    // ── Attach blur/input validation ────────────────────────────────────
+    const fieldsToValidate = form.querySelectorAll<ValidatableField>('[required]');
 
+    fieldsToValidate.forEach((field) => {
+      let hasBlurred = false;
+      field.addEventListener('blur', () => {
+        hasBlurred = true;
+        validateField(field);
+      });
+      field.addEventListener('input', () => {
+        if (hasBlurred) validateField(field);
+      });
+      field.addEventListener('change', () => {
+        if (hasBlurred) validateField(field);
+      });
+    });
+
+    // ── Status banner helpers ───────────────────────────────────────────
+
+    const showStatus = (state: 'success' | 'error', html: string): void => {
+      statusEl.dataset.state = state;
+      statusEl.innerHTML = html;
+      statusEl.removeAttribute('hidden');
+      // Move screen-reader focus to the announcement
+      statusEl.focus();
+    };
+
+    const hideStatus = (): void => {
+      statusEl.removeAttribute('data-state');
+      statusEl.innerHTML = '';
+      statusEl.setAttribute('hidden', '');
+    };
+
+    // ── Loading state helpers ───────────────────────────────────────────
+
+    const setLoading = (loading: boolean): void => {
+      submitBtn.disabled = loading;
+      if (loading) {
+        submitBtn.innerHTML =
+          '<span class="btn-spinner" aria-hidden="true"></span> Sending…';
+        submitBtn.setAttribute('aria-label', 'Sending your enquiry…');
+      } else {
+        submitBtn.innerHTML = originalBtnHTML;
+        submitBtn.setAttribute('aria-label', 'Submit your project enquiry');
+      }
+    };
+
+    // ── Form submit handler ─────────────────────────────────────────────
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideStatus();
+
+      // Client-side validation pass
+      let isValid = true;
       fieldsToValidate.forEach((field) => {
-        let hasBlurred = false;
-        field.addEventListener('blur', () => {
-          hasBlurred = true;
-          validateField(field);
-        });
-        field.addEventListener('input', () => {
-          if (hasBlurred) validateField(field);
-        });
-        field.addEventListener('change', () => {
-          if (hasBlurred) validateField(field);
-        });
+        if (!validateField(field)) isValid = false;
       });
 
-      // Validate all on submit
-      form.addEventListener('submit', (e) => {
-        let isValid = true;
-        fieldsToValidate.forEach((field) => {
-          if (!validateField(field)) {
-            isValid = false;
-          }
+      if (!isValid) {
+        const firstInvalid = form.querySelector<HTMLElement>('.is-invalid');
+        firstInvalid?.focus();
+        return;
+      }
+
+      // Build payload
+      const formData = new FormData(form);
+      const payload: Record<string, string> = {};
+      formData.forEach((val, key) => {
+        payload[key] = typeof val === 'string' ? val : '';
+      });
+
+      setLoading(true);
+
+      try {
+        const res = await fetch('/api/contact.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         });
 
-        if (!isValid) {
-          e.preventDefault();
-          // Move focus to first invalid field for screen reader UX
-          const firstInvalid = form.querySelector<HTMLElement>('.is-invalid');
-          firstInvalid?.focus();
+        // Parse JSON regardless of status code
+        let data: { success: boolean; message: string; errors?: Record<string, string> };
+        try {
+          data = await res.json();
+        } catch {
+          throw new Error('Unexpected server response.');
         }
-      });
-    }
+
+        if (data.success) {
+          // ── Success ──────────────────────────────────────────────────
+          showStatus(
+            'success',
+            '✓ Project enquiry sent successfully. We’ll get back to you within one business day.'
+          );
+          form.reset();
+          // Clear all validation states
+          fieldsToValidate.forEach(clearFieldError);
+
+        } else if (data.errors && typeof data.errors === 'object') {
+          // ── Server-side field errors ──────────────────────────────────
+          // Map PHP error keys back to field IDs and surface them
+          const fieldIdMap: Record<string, string> = {
+            name:         'cta-name',
+            email:        'cta-email',
+            project_type: 'cta-project-type',
+            message:      'cta-message',
+          };
+
+          let firstErrorField: ValidatableField | null = null;
+
+          Object.entries(data.errors).forEach(([key, msg]) => {
+            const fieldId = fieldIdMap[key];
+            if (fieldId) {
+              const field = form.querySelector<ValidatableField>(`#${fieldId}`);
+              if (field) {
+                setFieldError(field, msg);
+                if (!firstErrorField) firstErrorField = field;
+              }
+            }
+          });
+
+          showStatus('error', data.message || 'Please fix the errors below and try again.');
+          firstErrorField?.focus();
+
+        } else {
+          // ── Generic server error ──────────────────────────────────────
+          showStatus(
+            'error',
+            data.message ||
+            'Something went wrong. Please try again or email us directly at hello@codiflux.dev'
+          );
+        }
+
+      } catch {
+        // ── Network / parse error ─────────────────────────────────────
+        showStatus(
+          'error',
+          'Unable to send your message. Please check your connection or email us at hello@codiflux.dev'
+        );
+      } finally {
+        setLoading(false);
+      }
+    });
   })();
 </script>
