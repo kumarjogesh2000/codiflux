@@ -3,7 +3,10 @@
  * CTA.astro — Full-width conversion call-to-action section.
  *
  * The closing section of the home page — drives visitors to either
- * start a project or view the portfolio. High-contrast, memorable design.
+ * start a project or view the portfolio.
+ *
+ * Aesthetic: Deep Space Navy with a subtle Core Blue ambient orb.
+ * Electric Cyan eyebrow, white headline, restrained motion.
  */
 import Button from '@/components/ui/Button.astro';
 import { SITE } from '@/lib/constants';
@@ -14,16 +17,22 @@ import { SITE } from '@/lib/constants';
   aria-label="Call to action"
   class="section-padding relative overflow-hidden"
 >
-  <!-- Background gradient + grid -->
+  <!-- Background — very restrained, not neon -->
   <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+    <!-- Dot grid -->
     <div
-      class="absolute inset-0 opacity-[0.06]"
-      style="background-image: linear-gradient(var(--color-border-subtle) 1px, transparent 1px), linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px); background-size: 60px 60px;"
+      class="absolute inset-0 dot-grid opacity-[0.012]"
     ></div>
+    <!-- Core Blue ambient orb from top center — subtle beacon -->
     <div
-      class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px]
-             opacity-20 blur-[100px]
-             bg-radial-[at_50%_0%] from-brand-600 to-transparent"
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[320px]
+             opacity-[0.09] blur-[100px]"
+      style="background: radial-gradient(ellipse at 50% 0%, #2563EB, transparent 70%);"
+    ></div>
+    <!-- Hairline top border glow -->
+    <div
+      class="absolute top-0 left-0 right-0 h-px"
+      style="background: linear-gradient(90deg, transparent, rgba(37,99,235,0.20) 50%, transparent);"
     ></div>
   </div>
 
@@ -31,12 +40,12 @@ import { SITE } from '@/lib/constants';
     <div class="max-w-3xl mx-auto text-center">
 
       <!-- Eyebrow -->
-      <p class="mb-4 text-xs font-semibold uppercase tracking-[0.15em] text-brand-400">
+      <p class="mb-4 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-accent-cyan)] opacity-85">
         Ready to build?
       </p>
 
       <!-- Headline -->
-      <h2 class="text-4xl font-bold tracking-tight text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
+      <h2 class="text-4xl font-bold tracking-[-0.025em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl leading-[1.1]">
         Let's build something<br />
         <span class="gradient-text">worth being proud of.</span>
       </h2>
@@ -51,7 +60,7 @@ import { SITE } from '@/lib/constants';
       <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
         <Button href="/contact" size="lg" id="cta-section-primary">
           Start a Project
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </Button>
@@ -68,7 +77,7 @@ import { SITE } from '@/lib/constants';
           'Response within 24 hours',
         ].map((signal) => (
           <div class="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500 shrink-0" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-accent-cyan)] opacity-70 shrink-0" aria-hidden="true">
               <path d="M20 6 9 17l-5-5"/>
             </svg>
             <span>{signal}</span>
@@ -81,7 +90,7 @@ import { SITE } from '@/lib/constants';
         Prefer email?{' '}
         <a
           href={`mailto:${SITE.email}`}
-          class="text-[var(--color-text-secondary)] hover:text-brand-400
+          class="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-cyan)]
                  transition-colors duration-200 underline underline-offset-2"
         >
           {SITE.email}

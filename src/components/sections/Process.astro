@@ -37,25 +37,26 @@ import { PROCESS_STEPS } from '@/lib/constants';
         <li class="group relative">
           <div
             class="h-full p-7 rounded-xl border border-[var(--color-border-subtle)]
-                   bg-[var(--color-surface-raised)]
+                   bg-[var(--color-bg-raised)]
                    transition-all duration-300
                    hover:border-[var(--color-border-base)]
-                   hover:-translate-y-0.5"
+                   hover:-translate-y-0.5
+                   hover:shadow-[var(--shadow-card)]"
           >
             <!-- Step number -->
             <div class="mb-4 flex items-start justify-between">
               <span
                 class="text-4xl font-black tracking-tight leading-none
                        text-transparent bg-clip-text"
-                style={`background-image: linear-gradient(135deg, var(--color-brand-${i < 3 ? '400' : '600'}) 0%, var(--color-brand-800) 100%);`}
+                style={`background-image: linear-gradient(135deg, var(--color-accent-cyan) 0%, var(--color-accent-blue) 100%);`}
                 aria-hidden="true"
               >
                 {step.step}
               </span>
               <!-- Connector dot -->
               <span
-                class="mt-1 w-2 h-2 rounded-full bg-brand-700 opacity-50
-                       group-hover:opacity-100 group-hover:bg-brand-500
+                class="mt-1 w-2 h-2 rounded-full bg-[var(--color-border-base)] opacity-50
+                       group-hover:opacity-100 group-hover:bg-[var(--color-accent-blue)]
                        transition-all duration-300"
                 aria-hidden="true"
               ></span>

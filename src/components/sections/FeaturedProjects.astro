@@ -5,6 +5,9 @@
  * Shows 3 placeholder project cards. Phase 4 will pull these from
  * the Content Collections (src/content/projects/*.md).
  * Each card: platform badge, title, description, tech stack, live link.
+ *
+ * Aesthetic: Deep Space Navy card headers with subtle blue/teal gradients.
+ * No bright saturated colours — the palette stays in the navy/slate family.
  */
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import Badge         from '@/components/ui/Badge.astro';
@@ -18,9 +21,10 @@ const projects = [
     tagline: 'Premium Shopify store redesign with 38% conversion uplift',
     platform: 'Shopify',
     techStack: ['Shopify', 'Liquid', 'Custom CSS', 'Analytics'],
-    color: 'from-rose-950 to-[var(--color-surface-base)]',
-    accent: '#be185d',
-    emoji: '✦',
+    // Deep rose-navy — in the Deep Space Navy family
+    headerBg: 'linear-gradient(160deg, #1A1028 0%, #0B1221 100%)',
+    accentColor: 'rgba(190,24,93,0.5)',
+    symbol: '✦',
     featured: true,
   },
   {
@@ -29,9 +33,10 @@ const projects = [
     tagline: 'Marketing site and documentation hub built with React and Astro',
     platform: 'React / Astro',
     techStack: ['React', 'Astro', 'TypeScript', 'Tailwind'],
-    color: 'from-brand-950 to-[var(--color-surface-base)]',
-    accent: '#7c3aed',
-    emoji: '◈',
+    // Deep blue-navy — close to Core Blue family
+    headerBg: 'linear-gradient(160deg, #0D1A38 0%, #0B1221 100%)',
+    accentColor: 'rgba(37,99,235,0.55)',
+    symbol: '◈',
     featured: true,
   },
   {
@@ -40,9 +45,10 @@ const projects = [
     tagline: 'Local practice website generating 60%+ more new patient enquiries',
     platform: 'WordPress',
     techStack: ['WordPress', 'ACF', 'SEO', 'Performance'],
-    color: 'from-teal-950 to-[var(--color-surface-base)]',
-    accent: '#0d9488',
-    emoji: '◐',
+    // Deep teal-navy
+    headerBg: 'linear-gradient(160deg, #0B1E2A 0%, #0B1221 100%)',
+    accentColor: 'rgba(13,148,136,0.45)',
+    symbol: '◐',
     featured: true,
   },
 ];
@@ -81,36 +87,49 @@ const projects = [
             class="group relative h-full flex flex-col rounded-xl overflow-hidden
                    border border-[var(--color-border-subtle)]
                    hover:border-[var(--color-border-base)]
-                   transition-all duration-300 hover:-translate-y-1"
+                   transition-all duration-300 hover:-translate-y-1
+                   hover:shadow-[var(--shadow-card-hover)]
+                   bg-[var(--color-bg-raised)]"
             aria-label={project.title}
           >
-            <!-- Visual card header -->
+            <!-- Visual card header — deep navy gradient, not saturated -->
             <div
-              class:list={[
-                'relative flex items-center justify-center',
-                'h-48 p-8 bg-gradient-to-b',
-                project.color,
-              ]}
+              class="relative flex items-center justify-center h-48 p-8 overflow-hidden"
+              style={`background: ${project.headerBg};`}
             >
-              <!-- Decorative abstract shape -->
+              <!-- Subtle ambient glow behind symbol -->
               <div
-                class="text-7xl font-black opacity-[0.15] select-none
-                       transition-transform duration-500 group-hover:scale-110"
+                class="absolute inset-0 opacity-40"
+                style={`background: radial-gradient(circle at 50% 60%, ${project.accentColor}, transparent 65%);`}
                 aria-hidden="true"
-                style={`color: ${project.accent};`}
+              ></div>
+
+              <!-- Decorative symbol -->
+              <div
+                class="relative text-6xl font-black opacity-20 select-none
+                       transition-all duration-500 group-hover:scale-110 group-hover:opacity-30"
+                aria-hidden="true"
+                style={`color: white;`}
               >
-                {project.emoji}
+                {project.symbol}
               </div>
 
               <!-- Platform badge — positioned top right -->
               <div class="absolute top-4 right-4">
                 <Badge variant="brand" size="sm">{project.platform}</Badge>
               </div>
+
+              <!-- Hairline bottom separator -->
+              <div
+                class="absolute bottom-0 left-0 right-0 h-px"
+                style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04) 50%, transparent);"
+                aria-hidden="true"
+              ></div>
             </div>
 
             <!-- Card body -->
-            <div class="flex flex-col flex-1 p-6 bg-[var(--color-surface-raised)]">
-              <h3 class="text-base font-semibold text-[var(--color-text-primary)]">
+            <div class="flex flex-col flex-1 p-6">
+              <h3 class="text-base font-semibold text-[var(--color-text-primary)] tracking-[-0.01em]">
                 {project.title}
               </h3>
               <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)] flex-1">
@@ -128,8 +147,8 @@ const projects = [
               <a
                 href={`/portfolio/${project.id}`}
                 class="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold
-                       text-brand-400 hover:text-brand-300
-                       transition-colors duration-200 group/link"
+                       text-[var(--color-accent-cyan)] hover:opacity-80
+                       transition-opacity duration-200 group/link"
                 aria-label={`View case study for ${project.title}`}
               >
                 View case study

@@ -3,17 +3,19 @@
  * Hero.astro — Full-viewport hero section for the Home page.
  *
  * Features:
- * - Bold two-line headline with gradient accent
+ * - Bold two-line headline with gradient accent (cyan → blue)
  * - Supporting tagline
  * - Dual CTA (primary + secondary)
- * - Floating gradient orb background (CSS-only, no JS)
- * - Animated code-like badge element for developer credibility
+ * - Ambient background orbs: deep blue/cyan, opacity ≤ 0.10 (not neon)
+ * - Subtle dot grid overlay
  * - Scroll indicator
+ *
+ * Aesthetic: Linear / Vercel — restrained motion, generous whitespace,
+ * deep navy with purposeful cyan accent. No aggressive neon glow.
  *
  * All motion is wrapped in prefers-reduced-motion guard in global.css.
  */
 import Button from '@/components/ui/Button.astro';
-import Badge  from '@/components/ui/Badge.astro';
 ---
 
 <section
@@ -22,47 +24,57 @@ import Badge  from '@/components/ui/Badge.astro';
   class="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden"
 >
 
-  <!-- ── Ambient background orbs (CSS animated) ──────────────────── -->
+  <!-- ── Ambient background (CSS-only, no JS) ──────────────────── -->
   <div aria-hidden="true" class="absolute inset-0 pointer-events-none select-none">
-    <!-- Primary orb — top left -->
+
+    <!-- Primary orb — top left, Core Blue -->
     <div
-      class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full
-             opacity-[0.18] blur-[120px]
-             bg-radial-[at_50%_50%] from-brand-600 to-transparent
-             animate-[heroOrb1_12s_ease-in-out_infinite_alternate]"
+      class="absolute -top-48 -left-48 w-[700px] h-[700px] rounded-full
+             opacity-[0.08] blur-[140px]
+             animate-[heroOrb1_14s_ease-in-out_infinite_alternate]"
+      style="background: radial-gradient(circle at 50% 50%, #2563EB, transparent 70%);"
     ></div>
-    <!-- Secondary orb — bottom right -->
+
+    <!-- Secondary orb — bottom right, Electric Cyan (even more restrained) -->
     <div
-      class="absolute -bottom-40 -right-20 w-[500px] h-[500px] rounded-full
-             opacity-[0.12] blur-[100px]
-             bg-radial-[at_50%_50%] from-brand-400 to-transparent
-             animate-[heroOrb2_15s_ease-in-out_infinite_alternate]"
+      class="absolute -bottom-32 -right-24 w-[500px] h-[500px] rounded-full
+             opacity-[0.06] blur-[120px]
+             animate-[heroOrb2_18s_ease-in-out_infinite_alternate]"
+      style="background: radial-gradient(circle at 50% 50%, #00E5FF, transparent 70%);"
     ></div>
-    <!-- Accent dot grid overlay -->
+
+    <!-- Dot grid — faint structural grid, 1.5% opacity -->
     <div
-      class="absolute inset-0 opacity-[0.035]"
-      style="background-image: radial-gradient(circle, var(--color-text-primary) 1px, transparent 1px); background-size: 40px 40px;"
+      class="absolute inset-0 dot-grid opacity-[0.015]"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Hairline top highlight — premium detail -->
+    <div
+      class="absolute top-0 left-0 right-0 h-px"
+      style="background: linear-gradient(90deg, transparent, rgba(0,229,255,0.15) 50%, transparent);"
     ></div>
   </div>
 
   <!-- ── Content ──────────────────────────────────────────────────── -->
-  <div class="container relative z-10 py-20 md:py-32">
+  <div class="container relative z-10 py-24 md:py-36">
     <div class="max-w-4xl">
 
       <!-- Eyebrow badge -->
-      <div class="mb-6 animate-fade-up" style="animation-delay: 0ms;">
+      <div class="mb-8 animate-fade-up" style="animation-delay: 0ms;">
         <span
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold
-                 bg-brand-900/50 text-brand-300 border border-brand-800/50"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold
+                 bg-[rgba(0,229,255,0.06)] text-[var(--color-accent-cyan)]
+                 border border-[rgba(0,229,255,0.16)]"
         >
-          <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" aria-hidden="true"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-cyan)] opacity-80 animate-pulse" aria-hidden="true"></span>
           Available for new projects
         </span>
       </div>
 
       <!-- Main headline -->
       <h1
-        class="text-5xl font-bold leading-[1.08] tracking-tight text-[var(--color-text-primary)]
+        class="text-5xl font-bold leading-[1.08] tracking-[-0.03em] text-[var(--color-text-primary)]
                sm:text-6xl lg:text-7xl xl:text-8xl
                animate-fade-up"
         style="animation-delay: 80ms;"
@@ -73,7 +85,7 @@ import Badge  from '@/components/ui/Badge.astro';
 
       <!-- Supporting copy -->
       <p
-        class="mt-6 max-w-2xl text-lg leading-relaxed text-[var(--color-text-secondary)]
+        class="mt-7 max-w-xl text-lg leading-relaxed text-[var(--color-text-secondary)]
                sm:text-xl animate-fade-up"
         style="animation-delay: 160ms;"
       >
@@ -89,8 +101,7 @@ import Badge  from '@/components/ui/Badge.astro';
       >
         <Button href="/contact" size="lg" id="hero-cta-primary">
           Start a Project
-          <!-- Arrow icon -->
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </Button>
@@ -101,14 +112,16 @@ import Badge  from '@/components/ui/Badge.astro';
 
       <!-- Social proof strip -->
       <div
-        class="mt-14 flex flex-wrap items-center gap-x-6 gap-y-3 animate-fade-up"
+        class="mt-16 flex flex-wrap items-center gap-x-8 gap-y-3 animate-fade-up"
         style="animation-delay: 320ms;"
       >
-        <span class="text-xs text-[var(--color-text-tertiary)] uppercase tracking-widest font-medium">
+        <span class="text-[0.6875rem] text-[var(--color-text-tertiary)] uppercase tracking-[0.12em] font-medium">
           Trusted by
         </span>
         {['Startups', 'Agencies', 'E-commerce', 'SaaS', 'Local Businesses'].map((type) => (
-          <Badge variant="default" size="sm">{type}</Badge>
+          <span class="text-xs font-medium text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-colors duration-200">
+            {type}
+          </span>
         ))}
       </div>
 
@@ -119,11 +132,11 @@ import Badge  from '@/components/ui/Badge.astro';
   <div
     aria-hidden="true"
     class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2
-           text-[var(--color-text-tertiary)] animate-[scrollBounce_2s_ease-in-out_infinite]
+           text-[var(--color-text-tertiary)] animate-[scrollBounce_2.5s_ease-in-out_infinite]
            hidden md:flex"
   >
-    <span class="text-[10px] uppercase tracking-[0.15em] font-medium">Scroll</span>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <span class="text-[10px] uppercase tracking-[0.12em] font-medium">Scroll</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 5v14M5 12l7 7 7-7"/>
     </svg>
   </div>
@@ -133,16 +146,16 @@ import Badge  from '@/components/ui/Badge.astro';
 <style>
   @keyframes heroOrb1 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(60px, 40px) scale(1.1); }
+    to   { transform: translate(50px, 35px) scale(1.08); }
   }
 
   @keyframes heroOrb2 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(-40px, -60px) scale(1.15); }
+    to   { transform: translate(-35px, -50px) scale(1.12); }
   }
 
   @keyframes scrollBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
-    50%       { transform: translateX(-50%) translateY(6px); opacity: 1; }
+    0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.4; }
+    50%       { transform: translateX(-50%) translateY(5px); opacity: 0.8; }
   }
 </style>

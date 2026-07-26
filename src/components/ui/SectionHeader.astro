@@ -2,9 +2,11 @@
 /**
  * SectionHeader.astro — Reusable section heading block.
  *
- * Renders an eyebrow label, large heading, and optional subtext.
- * Used at the top of every major section to provide consistent
- * visual hierarchy and rhythm across the page.
+ * Renders an eyebrow label, large heading with optional gradient accent,
+ * and optional subtext. Provides consistent visual hierarchy and rhythm.
+ *
+ * Aesthetic: Linear / Vercel — restrained eyebrow in Electric Cyan,
+ * bold tight-tracking heading, measured subtext.
  *
  * Usage:
  *   <SectionHeader
@@ -60,14 +62,14 @@ const wrapperClasses = [
 <div class={wrapperClasses}>
 
   {eyebrow && (
-    <p class="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-brand-400">
+    <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-accent-cyan)] opacity-85">
       {eyebrow}
     </p>
   )}
 
   <Tag
     id={id}
-    class="text-4xl font-bold leading-tight tracking-tight text-[var(--color-text-primary)] sm:text-5xl"
+    class="text-4xl font-bold leading-[1.12] tracking-[-0.025em] text-[var(--color-text-primary)] sm:text-5xl"
   >
     {accent ? (
       <>
@@ -78,7 +80,7 @@ const wrapperClasses = [
   </Tag>
 
   {subtext && (
-    <p class="mt-4 text-lg leading-relaxed text-[var(--color-text-secondary)]">
+    <p class="mt-5 text-base leading-relaxed text-[var(--color-text-secondary)] sm:text-lg">
       {subtext}
     </p>
   )}

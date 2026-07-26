@@ -36,8 +36,8 @@ const currentYear = new Date().getFullYear();
               target="_blank"
               rel="noopener noreferrer"
               class="flex items-center justify-center w-8 h-8 rounded-md
-                     text-[var(--color-text-tertiary)] hover:text-white hover:bg-white/5
-                     transition-colors duration-150"
+                     text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-cyan)] hover:bg-[rgba(0,229,255,0.06)]
+                     transition-colors duration-200"
               aria-label={`${SITE.name} on ${link.label}`}
             >
               <!-- Icon placeholder — will be replaced with actual SVG icons in Phase 1 -->
@@ -60,7 +60,7 @@ const currentYear = new Date().getFullYear();
                   href={item.href}
                   target={item.external ? '_blank' : undefined}
                   rel={item.external ? 'noopener noreferrer' : undefined}
-                  class="text-sm text-[var(--color-text-secondary)] hover:text-white
+                  class="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]
                          transition-colors duration-150"
                 >
                   {item.label}

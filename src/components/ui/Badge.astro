@@ -2,6 +2,10 @@
 /**
  * Badge.astro — Pill label for categories, tech stack tags, status labels.
  *
+ * Aesthetic: Linear / Vercel — clean, flat, not colourful.
+ * The `brand` variant uses Electric Cyan text on a deep navy tint
+ * for high-end highlighting without neon aggression.
+ *
  * Usage:
  *   <Badge>WordPress</Badge>
  *   <Badge variant="brand">Featured</Badge>
@@ -31,24 +35,28 @@ const sizes: Record<BadgeSize, string> = {
 };
 
 const variants: Record<BadgeVariant, string> = {
+  // Neutral — used for tech stack tags, general labels
   default: [
-    'bg-[var(--color-surface-overlay)]',
+    'bg-[var(--color-bg-overlay)]',
     'text-[var(--color-text-secondary)]',
     'border border-[var(--color-border-base)]',
   ].join(' '),
 
+  // Brand — cyan text on deep navy, for featured / highlight labels
   brand: [
-    'bg-brand-900/50',
-    'text-brand-300',
-    'border border-brand-800/60',
+    'bg-[rgba(0,229,255,0.06)]',
+    'text-[var(--color-accent-cyan)]',
+    'border border-[rgba(0,229,255,0.18)]',
   ].join(' '),
 
+  // Outline — purely border, transparent fill
   outline: [
     'bg-transparent',
     'text-[var(--color-text-secondary)]',
     'border border-[var(--color-border-base)]',
   ].join(' '),
 
+  // Success — green for live / active states
   success: [
     'bg-emerald-950/60',
     'text-emerald-400',
@@ -57,7 +65,7 @@ const variants: Record<BadgeVariant, string> = {
 };
 
 const classes = [
-  'inline-flex items-center font-medium rounded-full',
+  'inline-flex items-center font-medium rounded-md',
   'whitespace-nowrap tracking-wide',
   sizes[size],
   variants[variant],

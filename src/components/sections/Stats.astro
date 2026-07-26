@@ -39,7 +39,7 @@ const stats = [
 <section
   id="stats"
   aria-labelledby="stats-heading"
-  class="section-padding bg-[var(--color-surface-raised)] border-y border-[var(--color-border-subtle)]"
+  class="section-padding bg-[var(--color-bg-raised)] border-y border-[var(--color-border-subtle)]"
 >
   <div class="container">
 
@@ -57,8 +57,9 @@ const stats = [
         <div
           class="group flex flex-col items-center text-center p-6 rounded-xl
                  border border-[var(--color-border-subtle)]
-                 bg-[var(--color-surface-base)]
-                 transition-all duration-300 hover:border-brand-800/50"
+                 bg-[var(--color-bg-base)]
+                 transition-all duration-300 hover:border-[var(--color-border-strong)]
+                 hover:shadow-[var(--shadow-card-glow)]"
         >
           <dt class="sr-only">{stat.label}</dt>
           <dd

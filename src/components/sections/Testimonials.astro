@@ -74,9 +74,10 @@ const testimonials = [
         <li>
           <figure
             class="h-full flex flex-col p-6 rounded-xl
-                   bg-[var(--color-surface-raised)]
+                   bg-[var(--color-bg-raised)]
                    border border-[var(--color-border-subtle)]
                    hover:border-[var(--color-border-base)]
+                   hover:shadow-[var(--shadow-card)]
                    transition-all duration-300 hover:-translate-y-0.5"
             aria-label={`Testimonial from ${t.name}, ${t.role} at ${t.company}`}
           >
@@ -89,7 +90,7 @@ const testimonials = [
                   height="14"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  class="text-accent-500"
+                  class="text-[var(--color-accent-cyan)]"
                   aria-hidden="true"
                 >
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -109,8 +110,8 @@ const testimonials = [
               <!-- Avatar -->
               <div
                 class="w-9 h-9 rounded-full flex items-center justify-center shrink-0
-                       bg-brand-900 border border-brand-800/50
-                       text-brand-300 text-xs font-bold"
+                       bg-[var(--color-bg-overlay)] border border-[var(--color-border-base)]
+                       text-[var(--color-accent-cyan)] text-xs font-bold"
                 aria-hidden="true"
               >
                 {t.avatar}

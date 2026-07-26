@@ -43,7 +43,7 @@ const faqs = [
 <section
   id="faq"
   aria-labelledby="faq-heading"
-  class="section-padding bg-[var(--color-surface-raised)]"
+  class="section-padding bg-[var(--color-bg-raised)]"
 >
   <div class="container max-w-3xl">
 
@@ -63,8 +63,8 @@ const faqs = [
             <summary
               class="flex items-center justify-between gap-4 py-5 cursor-pointer
                      text-left font-medium text-[var(--color-text-primary)]
-                     hover:text-brand-300 transition-colors duration-200
-                     focus-visible:outline-none focus-visible:text-brand-300
+                     hover:text-[var(--color-accent-cyan)] transition-colors duration-200
+                     focus-visible:outline-none focus-visible:text-[var(--color-accent-cyan)]
                      list-none [&::-webkit-details-marker]:hidden"
             >
               <dt class="text-sm sm:text-base">{faq.q}</dt>
@@ -73,8 +73,8 @@ const faqs = [
                 class="shrink-0 w-5 h-5 flex items-center justify-center
                        rounded-md border border-[var(--color-border-base)]
                        text-[var(--color-text-tertiary)]
-                       group-open:text-brand-400 group-open:border-brand-800/50
-                       group-open:bg-brand-900/30
+                       group-open:text-[var(--color-accent-cyan)] group-open:border-[rgba(0,229,255,0.2)]
+                       group-open:bg-[rgba(0,229,255,0.05)]
                        transition-all duration-200"
                 aria-hidden="true"
               >
@@ -107,8 +107,8 @@ const faqs = [
         Still have questions?{' '}
         <a
           href="/contact"
-          class="text-brand-400 hover:text-brand-300 font-medium
-                 transition-colors duration-200 underline underline-offset-2"
+          class="text-[var(--color-accent-cyan)] hover:opacity-80 font-medium
+                 transition-opacity duration-200 underline underline-offset-2"
         >
           We're happy to chat.
         </a>

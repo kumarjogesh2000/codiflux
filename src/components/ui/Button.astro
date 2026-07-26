@@ -5,6 +5,8 @@
  * Renders as <a> when `href` is supplied, <button> otherwise.
  * All visual decisions come from design tokens — never raw values.
  *
+ * Aesthetic: Linear / Vercel — precise, sharp, purposeful.
+ *
  * Usage:
  *   <Button href="/contact">Start a Project</Button>
  *   <Button variant="secondary" size="lg">View Work</Button>
@@ -49,26 +51,32 @@ const sizes: Record<ButtonSize, string> = {
 };
 
 const variants: Record<ButtonVariant, string> = {
+  // Core Blue (#2563EB) primary — trust + action, not neon violet
   primary: [
-    'bg-brand-600 text-white',
-    'hover:bg-brand-500 active:bg-brand-700',
-    'shadow-[0_0_0px_rgba(124,58,237,0)]',
-    'hover:shadow-[0_0_28px_rgba(124,58,237,0.45)]',
+    'bg-[var(--color-accent-blue)] text-white',
+    'border border-[var(--color-accent-blue)]',
+    'hover:bg-[var(--color-accent-blue-hover)]',
+    'hover:border-[var(--color-accent-blue-hover)]',
+    'shadow-[0_0_0px_rgba(37,99,235,0)]',
+    'hover:shadow-[0_0_24px_rgba(37,99,235,0.35)]',
+    'active:bg-[var(--color-accent-blue-deep)]',
     'active:scale-[0.97]',
   ].join(' '),
 
+  // Ghost-border secondary — restrained, premium
   secondary: [
     'bg-transparent text-[var(--color-text-primary)]',
     'border border-[var(--color-border-base)]',
     'hover:border-[var(--color-border-strong)]',
-    'hover:bg-[var(--color-surface-overlay)]',
+    'hover:bg-[var(--color-bg-overlay)]',
     'active:scale-[0.97]',
   ].join(' '),
 
+  // Text-only ghost — lowest hierarchy
   ghost: [
     'bg-transparent text-[var(--color-text-secondary)]',
     'hover:text-[var(--color-text-primary)]',
-    'hover:bg-white/5',
+    'hover:bg-white/[0.04]',
     'active:scale-[0.97]',
   ].join(' '),
 };
@@ -76,16 +84,18 @@ const variants: Record<ButtonVariant, string> = {
 const base = [
   // Layout
   'inline-flex items-center justify-center gap-2',
-  'whitespace-nowrap font-medium rounded-md',
+  'whitespace-nowrap font-medium',
+  // Rounded — slightly tighter than before (md = 8px) for engineering feel
+  'rounded-lg',
   // Transitions — all properties for shadow, colour, transform, border
   'transition-all duration-200',
   // Accessibility
   'focus-visible:outline-none',
-  'focus-visible:ring-2 focus-visible:ring-brand-500',
+  'focus-visible:ring-2 focus-visible:ring-[var(--color-accent-blue)]',
   'focus-visible:ring-offset-2',
-  'focus-visible:ring-offset-[var(--color-surface-base)]',
+  'focus-visible:ring-offset-[var(--color-bg-base)]',
   // Disabled state
-  'disabled:opacity-50 disabled:pointer-events-none',
+  'disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed',
   // Size + variant
   sizes[size],
   variants[variant],
