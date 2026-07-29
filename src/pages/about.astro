@@ -1,0 +1,981 @@
+---
+/**
+ * about.astro — About Page (/about)
+ *
+ * Premium About page for CodiFlux — a detailed, authentic look at the studio.
+ *
+ * Sections (in order):
+ *   1. Hero              — Label + heading + description + dual CTA
+ *   2. Our Story         — Founding, mission, vision, philosophy
+ *   3. Founder           — Jogesh Kumar — role, expertise, stack
+ *   4. Core Values       — 4 animated cards
+ *   5. Development Process — 7-step timeline
+ *   6. Why CodiFlux      — 7 client reasons
+ *   7. Tech Ecosystem    — Categorised technology grid
+ *   8. Stats             — Animated counters
+ *   9. CTA               — Final conversion section
+ *
+ * Design: Cyber Dark — bg #0B1221, surface #151E32, accent #00E5FF / #2563EB.
+ * Animations: Intersection Observer fade-up only. No external animation libraries.
+ * SEO: Full Open Graph, Twitter Card, canonical, JSON-LD Person schema.
+ * Accessibility: Semantic HTML, ARIA labels, keyboard nav, visible focus states.
+ * Performance: Zero layout shift, Astro zero-JS static output, minimal inline JS.
+ */
+
+import PageLayout from '@/layouts/PageLayout.astro';
+import Button     from '@/components/ui/Button.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { SITE }   from '@/lib/constants';
+
+// ─── Page SEO ─────────────────────────────────────────────────────────────────
+const pageTitle       = 'About';
+const pageDescription =
+  'Learn about CodiFlux — a modern software and web development studio founded by Jogesh Kumar. ' +
+  'We build high-performance websites, scalable web applications, automation solutions and AI-powered digital experiences.';
+const canonicalUrl    = `${SITE.url}/about`;
+const ogImage         = '/og/og-about.png';
+
+// ─── JSON-LD: Person structured data ─────────────────────────────────────────
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Jogesh Kumar',
+  jobTitle: 'Full Stack Developer & AI Analyst',
+  worksFor: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+  },
+  url: canonicalUrl,
+  knowsAbout: [
+    'Web Development',
+    'Frontend Development',
+    'Backend Development',
+    'Astro',
+    'React',
+    'Next.js',
+    'Node.js',
+    'NestJS',
+    'PostgreSQL',
+    'AI Integration',
+    'Performance Optimization',
+    'SEO',
+  ],
+};
+
+// ─── Core Values ──────────────────────────────────────────────────────────────
+const coreValues = [
+  {
+    icon: `<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>`,
+    title: 'Performance First',
+    body:  'Every millisecond matters. We treat performance as a feature, not an afterthought — shipping sites that score high on Core Web Vitals from day one.',
+  },
+  {
+    icon: `<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`,
+    title: 'Clean Engineering',
+    body:  'Maintainable code over shortcuts. We write for the developer who touches this codebase in twelve months — clear structure, sensible abstractions, zero magic.',
+  },
+  {
+    icon: `<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
+    title: 'Business Focus',
+    body:  "Technology exists to solve business problems. We measure success by outcomes — conversions, load times, retention — not by how sophisticated the stack looks.",
+  },
+  {
+    icon: `<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>`,
+    title: 'Continuous Learning',
+    body:  "The web moves fast and we move with it. We invest time in modern tooling, emerging standards, and AI-assisted workflows so our clients always get current best practices.",
+  },
+] as const;
+
+// ─── Development Process (7 steps) ───────────────────────────────────────────
+const processSteps = [
+  { step: '01', title: 'Discover',  body: 'Deep-dive into your goals, constraints, and audience before the first wireframe is drawn.' },
+  { step: '02', title: 'Plan',      body: 'Scope, architecture, and timeline agreed in writing — no scope-creep surprises later.' },
+  { step: '03', title: 'Design',    body: 'UI direction aligned with your brand identity, optimised for conversion and clarity.' },
+  { step: '04', title: 'Develop',   body: 'Clean, tested code built to modern standards — fully responsive and accessible from day one.' },
+  { step: '05', title: 'Optimise',  body: 'Performance audit, Core Web Vitals tuning, and SEO foundations locked in before launch.' },
+  { step: '06', title: 'Launch',    body: 'We handle DNS, deployment, and the go-live checklist so you can focus on the milestone.' },
+  { step: '07', title: 'Support',   body: 'Post-launch monitoring, maintenance, and ongoing iteration available on retainer.' },
+] as const;
+
+// ─── Why Clients Choose CodiFlux ─────────────────────────────────────────────
+const clientReasons = [
+  { icon: `<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>`, label: 'Responsive Design' },
+  { icon: `<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>`,                       label: 'SEO Ready' },
+  { icon: `<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>`,                                                       label: 'Lightning Fast' },
+  { icon: `<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`,                            label: 'Scalable Architecture' },
+  { icon: `<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>`, label: 'Clean Code' },
+  { icon: `<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.27a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/>`, label: 'Long-Term Support' },
+  { icon: `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>`,                       label: 'Transparent Communication' },
+] as const;
+
+// ─── Tech Ecosystem ───────────────────────────────────────────────────────────
+const techCategories = [
+  {
+    label: 'Frontend',
+    techs: ['Astro', 'React', 'Next.js', 'Tailwind CSS'],
+  },
+  {
+    label: 'Backend',
+    techs: ['Node.js', 'NestJS', 'PHP'],
+  },
+  {
+    label: 'Database',
+    techs: ['PostgreSQL', 'Prisma'],
+  },
+  {
+    label: 'CMS',
+    techs: ['WordPress', 'Shopify', 'Wix Studio', 'Squarespace'],
+  },
+  {
+    label: 'Deployment',
+    techs: ['GitHub', 'GitHub Actions', 'Hostinger', 'DigitalOcean'],
+  },
+] as const;
+
+// ─── Stats ────────────────────────────────────────────────────────────────────
+const stats = [
+  { value: 35,  suffix: '+', label: 'Projects Delivered',      detail: 'across multiple industries' },
+  { value: 20,  suffix: '+', label: 'Technologies Used',       detail: 'in production environments' },
+  { value: 100, suffix: '',  label: 'Lighthouse Score Target',  detail: 'performance goal, every build' },
+  { value: 95,  suffix: '%', label: 'Client Satisfaction',     detail: 'based on project feedback' },
+] as const;
+---
+
+<PageLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={canonicalUrl}
+  ogImage={ogImage}
+>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       JSON-LD: Person schema (About page adds Person to Organisation)
+       ═══════════════════════════════════════════════════════════════ -->
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
+
+  <!-- ══════════════════════════════════════════════════════
+       1 — HERO
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="about-hero"
+    aria-label="About CodiFlux hero"
+    class="relative min-h-[70vh] flex items-center overflow-hidden"
+  >
+    <!-- Ambient background -->
+    <div aria-hidden="true" class="absolute inset-0 pointer-events-none select-none">
+      <div
+        class="absolute -top-48 -left-48 w-[700px] h-[700px] rounded-full
+               opacity-[0.07] blur-[140px]"
+        style="background: radial-gradient(circle at 50% 50%, #2563EB, transparent 70%);"
+      ></div>
+      <div
+        class="absolute -bottom-32 right-0 w-[480px] h-[480px] rounded-full
+               opacity-[0.05] blur-[120px]"
+        style="background: radial-gradient(circle at 50% 50%, #00E5FF, transparent 70%);"
+      ></div>
+      <div class="absolute inset-0 dot-grid opacity-[0.015]"></div>
+      <!-- Hairline top highlight -->
+      <div
+        class="absolute top-0 left-0 right-0 h-px"
+        style="background: linear-gradient(90deg, transparent, rgba(0,229,255,0.14) 50%, transparent);"
+      ></div>
+    </div>
+
+    <div class="container relative z-10 py-28 md:py-36">
+      <div class="max-w-4xl" data-reveal>
+
+        <!-- Eyebrow label -->
+        <p class="mb-8 eyebrow reveal-item" style="--delay:0ms">
+          About CodiFlux
+        </p>
+
+        <!-- Main heading (h1 — only one on page) -->
+        <h1
+          class="text-5xl font-bold leading-[1.08] tracking-[-0.03em]
+                 text-[var(--color-text-primary)]
+                 sm:text-6xl lg:text-7xl xl:text-[5.5rem]
+                 reveal-item"
+          style="--delay:80ms"
+        >
+          Engineering Digital Experiences<br />
+          That <span class="gradient-text">Perform Beyond</span> Expectations.
+        </h1>
+
+        <!-- Description -->
+        <p
+          class="mt-7 max-w-2xl text-lg leading-relaxed text-[var(--color-text-secondary)]
+                 sm:text-xl reveal-item"
+          style="--delay:160ms"
+        >
+          CodiFlux is a modern software and web development studio focused on creating
+          high-performance websites, scalable web applications, automation solutions
+          and AI-powered digital experiences.
+        </p>
+
+        <!-- CTA buttons -->
+        <div
+          class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 reveal-item"
+          style="--delay:240ms"
+        >
+          <Button href="/portfolio" size="lg" id="about-hero-cta-work">
+            View Our Work
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Button>
+          <Button href="/contact" variant="secondary" size="lg" id="about-hero-cta-project">
+            Start a Project
+          </Button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       2 — OUR STORY
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="our-story"
+    aria-labelledby="story-heading"
+    class="section-padding bg-[var(--color-bg-raised)] border-y border-[var(--color-border-subtle)]"
+  >
+    <div class="container">
+      <div class="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24 items-center">
+
+        <!-- Left — section header -->
+        <div data-reveal>
+          <SectionHeader
+            eyebrow="Our Story"
+            heading="Why CodiFlux"
+            accent="exists."
+            align="left"
+            id="story-heading"
+          />
+
+          <!-- Decorative accent bar -->
+          <div
+            class="mt-8 w-16 h-0.5 reveal-item"
+            style="--delay:80ms; background: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-blue));"
+            aria-hidden="true"
+          ></div>
+        </div>
+
+        <!-- Right — story paragraphs -->
+        <div class="space-y-6 text-[var(--color-text-secondary)] leading-relaxed" data-reveal>
+          <p class="reveal-item" style="--delay:0ms">
+            CodiFlux was founded on a simple frustration: too many businesses were
+            paying for websites that looked fine but performed poorly, were
+            impossible to maintain, and delivered no measurable return. The gap
+            between what was being sold and what was actually useful was significant.
+          </p>
+          <p class="reveal-item" style="--delay:60ms">
+            Our <strong class="text-[var(--color-text-primary)] font-semibold">mission</strong> is
+            to close that gap — to build digital products where engineering quality
+            and business outcomes are treated as the same objective, not competing
+            priorities.
+          </p>
+          <p class="reveal-item" style="--delay:120ms">
+            Our <strong class="text-[var(--color-text-primary)] font-semibold">vision</strong> is
+            a web where fast, accessible, and maintainable are the default — not
+            premium add-ons — and where every small business has access to
+            software-quality engineering.
+          </p>
+          <p class="reveal-item" style="--delay:180ms">
+            Our <strong class="text-[var(--color-text-primary)] font-semibold">development philosophy</strong> is
+            grounded in restraint: quality, performance, maintainability, and user
+            experience come first. Visual clutter, bloated dependencies, and
+            over-engineered solutions are treated as liabilities, not features.
+            We write for the developer who inherits this code in a year, and the
+            user who expects the page to load before they change their mind.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       3 — FOUNDER
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="founder"
+    aria-labelledby="founder-heading"
+    class="section-padding"
+  >
+    <div class="container">
+
+      <div class="mb-16 flex justify-center">
+        <SectionHeader
+          eyebrow="Meet the Founder"
+          heading="The engineer"
+          accent="behind the work."
+          id="founder-heading"
+          subtext="A full-stack developer and AI analyst who builds tools that solve real business problems, not just beautiful demos."
+        />
+      </div>
+
+      <!-- Founder card -->
+      <div
+        class="mx-auto max-w-5xl rounded-2xl border border-[var(--color-border-subtle)]
+               bg-[var(--color-bg-raised)]
+               overflow-hidden
+               shadow-[var(--shadow-card)]"
+        data-reveal
+      >
+        <!-- Top gradient bar -->
+        <div
+          class="h-1 w-full reveal-item"
+          style="--delay:0ms; background: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-blue));"
+          aria-hidden="true"
+        ></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-0">
+
+          <!-- Left — identity panel -->
+          <div
+            class="flex flex-col items-center justify-center gap-6 p-10
+                   border-b border-[var(--color-border-subtle)]
+                   lg:border-b-0 lg:border-r
+                   bg-[var(--color-bg-overlay)]
+                   reveal-item"
+            style="--delay:60ms"
+          >
+            <!-- Avatar placeholder — initials monogram -->
+            <div
+              class="relative w-28 h-28 rounded-full overflow-hidden
+                     border-2 border-[var(--color-border-base)]
+                     shadow-[var(--shadow-glow-cyan)]
+                     flex items-center justify-center
+                     text-4xl font-black gradient-text select-none"
+              aria-label="Jogesh Kumar — initials avatar"
+              role="img"
+            >
+              <span aria-hidden="true">JK</span>
+              <!-- Subtle ring -->
+              <div
+                class="absolute inset-0 rounded-full"
+                style="background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.08), transparent 70%);"
+                aria-hidden="true"
+              ></div>
+            </div>
+
+            <div class="text-center">
+              <h2 class="text-2xl font-bold text-[var(--color-text-primary)]">
+                Jogesh Kumar
+              </h2>
+              <p class="mt-1.5 text-sm font-medium text-[var(--color-accent-cyan)] opacity-85">
+                Full Stack Developer
+              </p>
+              <p class="text-sm font-medium text-[var(--color-text-secondary)]">
+                AI Analyst
+              </p>
+            </div>
+
+            <!-- Expertise tags -->
+            <ul class="flex flex-wrap justify-center gap-2" aria-label="Areas of expertise">
+              {[
+                'Frontend',
+                'Backend',
+                'AI Integration',
+                'Performance',
+                'SEO',
+                'Automation',
+                'CMS Dev',
+              ].map((tag) => (
+                <li>
+                  <span
+                    class="inline-block px-2.5 py-1 rounded-md text-[11px] font-medium tracking-wide
+                           bg-[rgba(0,229,255,0.06)] text-[var(--color-text-secondary)]
+                           border border-[rgba(0,229,255,0.1)]"
+                  >
+                    {tag}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Right — bio + stack -->
+          <div class="p-10 reveal-item" style="--delay:120ms">
+            <div class="space-y-5 text-[var(--color-text-secondary)] leading-relaxed">
+              <p>
+                Jogesh is a full-stack developer and AI analyst with hands-on experience
+                building production-grade digital products across a wide range of industries.
+                He founded CodiFlux to bridge the gap between technically sound engineering
+                and the practical needs of growing businesses — where the measure of good
+                software is whether it moves the needle, not whether it uses the trendiest framework.
+              </p>
+              <p>
+                His work spans the full delivery stack: from pixel-precise frontend interfaces
+                to scalable backend systems, headless CMS integrations, and AI-assisted
+                workflows that automate the manual parts of content and business operations.
+                He approaches every engagement with the same philosophy: understand the
+                business problem first, then select the right technology to solve it.
+              </p>
+              <p>
+                Jogesh holds his work to a straightforward standard — would he be comfortable
+                maintaining this in a year? If not, it ships differently. That commitment
+                to maintainability and clarity is what separates CodiFlux from agencies
+                that optimise for speed of delivery over quality of outcome.
+              </p>
+            </div>
+
+            <!-- Technology stack -->
+            <div class="mt-8">
+              <p class="mb-4 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">
+                Technologies &amp; Platforms
+              </p>
+              <ul class="flex flex-wrap gap-2" aria-label="Technologies and platforms used by Jogesh Kumar">
+                {[
+                  'Astro', 'React', 'Next.js', 'WordPress', 'Shopify',
+                  'Wix Studio', 'Squarespace', 'Tailwind CSS', 'Node.js',
+                  'NestJS', 'Prisma', 'PostgreSQL', 'Git', 'GitHub',
+                  'DigitalOcean', 'Hostinger',
+                ].map((tech) => (
+                  <li>
+                    <span
+                      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md
+                             text-xs font-medium
+                             bg-[var(--color-bg-overlay)] text-[var(--color-text-secondary)]
+                             border border-[var(--color-border-subtle)]
+                             hover:border-[var(--color-border-base)]
+                             hover:text-[var(--color-text-primary)]
+                             transition-colors duration-150 cursor-default"
+                    >
+                      <span class="w-1 h-1 rounded-full bg-[var(--color-accent-cyan)] opacity-60" aria-hidden="true"></span>
+                      {tech}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       4 — CORE VALUES
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="core-values"
+    aria-labelledby="values-heading"
+    class="section-padding bg-[var(--color-bg-raised)] border-y border-[var(--color-border-subtle)]"
+  >
+    <div class="container">
+
+      <div class="mb-16 flex justify-center">
+        <SectionHeader
+          eyebrow="What We Stand For"
+          heading="Core values that"
+          accent="guide every build."
+          id="values-heading"
+          subtext="These aren't aspirational wall art. They're the criteria we apply to every decision, from architecture to line-of-code granularity."
+        />
+      </div>
+
+      <ul
+        class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        role="list"
+        aria-label="CodiFlux core values"
+        data-reveal
+      >
+        {coreValues.map((value, i) => (
+          <li
+            class="group relative p-7 rounded-xl border border-[var(--color-border-subtle)]
+                   bg-[var(--color-bg-base)]
+                   transition-all duration-300
+                   hover:border-[var(--color-border-base)]
+                   hover:-translate-y-1
+                   hover:shadow-[var(--shadow-card-glow)]
+                   reveal-item"
+            style={`--delay:${i * 80}ms`}
+          >
+            <!-- Top accent line on hover -->
+            <div
+              class="absolute top-0 left-7 right-7 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style="background: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-blue));"
+              aria-hidden="true"
+            ></div>
+
+            <!-- Icon -->
+            <div
+              class="mb-5 flex items-center justify-center w-11 h-11 rounded-lg
+                     bg-[var(--color-bg-overlay)] border border-[var(--color-border-subtle)]
+                     group-hover:border-[var(--color-border-base)]
+                     group-hover:bg-[rgba(0,229,255,0.05)]
+                     transition-all duration-300"
+              aria-hidden="true"
+            >
+              <svg
+                width="19" height="19" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor"
+                stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                class="text-[var(--color-accent-cyan)]"
+              >
+                <Fragment set:html={value.icon} />
+              </svg>
+            </div>
+
+            <h3 class="mb-2.5 text-base font-semibold text-[var(--color-text-primary)]">
+              {value.title}
+            </h3>
+            <p class="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+              {value.body}
+            </p>
+          </li>
+        ))}
+      </ul>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       5 — DEVELOPMENT PROCESS
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="about-process"
+    aria-labelledby="about-process-heading"
+    class="section-padding"
+  >
+    <div class="container">
+
+      <div class="mb-16 flex justify-center">
+        <SectionHeader
+          eyebrow="How We Work"
+          heading="A structured process"
+          accent="from start to support."
+          id="about-process-heading"
+          subtext="No surprises. No scope creep. A defined path from the first conversation to long-term stability."
+        />
+      </div>
+
+      <!-- Timeline grid -->
+      <ol
+        class="relative grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+        aria-label="Development process steps"
+        data-reveal
+      >
+        {processSteps.map((step, i) => (
+          <li
+            class="group relative reveal-item"
+            style={`--delay:${i * 60}ms`}
+          >
+            <div
+              class="h-full p-6 rounded-xl border border-[var(--color-border-subtle)]
+                     bg-[var(--color-bg-raised)]
+                     transition-all duration-300
+                     hover:border-[var(--color-border-base)]
+                     hover:-translate-y-0.5
+                     hover:shadow-[var(--shadow-card)]"
+            >
+              <!-- Step number + connector dot -->
+              <div class="mb-4 flex items-start justify-between">
+                <span
+                  class="text-3xl font-black tracking-tight leading-none
+                         bg-clip-text text-transparent"
+                  style="background-image: linear-gradient(135deg, var(--color-accent-cyan) 0%, var(--color-accent-blue) 100%);"
+                  aria-hidden="true"
+                >
+                  {step.step}
+                </span>
+                <span
+                  class="mt-1 w-2 h-2 rounded-full bg-[var(--color-border-base)] opacity-50
+                         group-hover:opacity-100 group-hover:bg-[var(--color-accent-blue)]
+                         transition-all duration-300"
+                  aria-hidden="true"
+                ></span>
+              </div>
+
+              <h3 class="mb-2 text-base font-semibold text-[var(--color-text-primary)]">
+                {step.title}
+              </h3>
+              <p class="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                {step.body}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       6 — WHY CLIENTS CHOOSE CODIFLUX
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="why-codiflux"
+    aria-labelledby="why-heading"
+    class="section-padding bg-[var(--color-bg-raised)] border-y border-[var(--color-border-subtle)]"
+  >
+    <div class="container">
+
+      <div class="mb-16 flex justify-center">
+        <SectionHeader
+          eyebrow="Why CodiFlux"
+          heading="What you get with"
+          accent="every project."
+          id="why-heading"
+          subtext="Not just deliverables — a working partnership with clear communication, measurable results, and code you'll be proud to maintain."
+        />
+      </div>
+
+      <ul
+        class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7"
+        role="list"
+        aria-label="Client benefits"
+        data-reveal
+      >
+        {clientReasons.map((reason, i) => (
+          <li
+            class="group flex flex-col items-center gap-4 p-5 rounded-xl
+                   border border-[var(--color-border-subtle)]
+                   bg-[var(--color-bg-base)]
+                   text-center
+                   transition-all duration-300
+                   hover:border-[var(--color-border-base)]
+                   hover:-translate-y-1
+                   hover:shadow-[var(--shadow-card)]
+                   cursor-default reveal-item"
+            style={`--delay:${i * 50}ms`}
+          >
+            <div
+              class="flex items-center justify-center w-10 h-10 rounded-lg
+                     bg-[var(--color-bg-overlay)] border border-[var(--color-border-subtle)]
+                     group-hover:border-[var(--color-border-base)]
+                     group-hover:bg-[rgba(0,229,255,0.05)]
+                     transition-all duration-300"
+              aria-hidden="true"
+            >
+              <svg
+                width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor"
+                stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                class="text-[var(--color-accent-cyan)]"
+              >
+                <Fragment set:html={reason.icon} />
+              </svg>
+            </div>
+            <span class="text-sm font-semibold text-[var(--color-text-primary)] leading-snug">
+              {reason.label}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       7 — TECH ECOSYSTEM
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="tech-ecosystem"
+    aria-labelledby="tech-ecosystem-heading"
+    class="section-padding"
+  >
+    <div class="container">
+
+      <div class="mb-16 flex justify-center">
+        <SectionHeader
+          eyebrow="Tech Ecosystem"
+          heading="Tools we trust in"
+          accent="production."
+          id="tech-ecosystem-heading"
+          subtext="Every technology in this list has been used in real client projects. We select for reliability, longevity, and developer experience."
+        />
+      </div>
+
+      <div class="space-y-8" data-reveal>
+        {techCategories.map((cat, catIdx) => (
+          <div class="reveal-item" style={`--delay:${catIdx * 80}ms`}>
+            <!-- Category label -->
+            <p class="mb-4 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">
+              {cat.label}
+            </p>
+            <!-- Tech chips -->
+            <ul class="flex flex-wrap gap-3" aria-label={`${cat.label} technologies`}>
+              {cat.techs.map((tech) => (
+                <li>
+                  <span
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
+                           text-sm font-medium
+                           bg-[var(--color-bg-raised)] text-[var(--color-text-secondary)]
+                           border border-[var(--color-border-subtle)]
+                           hover:text-[var(--color-text-primary)]
+                           hover:border-[var(--color-border-base)]
+                           hover:bg-[var(--color-bg-overlay)]
+                           transition-all duration-200 cursor-default"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-cyan)] opacity-60 shrink-0" aria-hidden="true"></span>
+                    {tech}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       8 — STATS (animated counters)
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="about-stats"
+    aria-labelledby="about-stats-heading"
+    class="section-padding bg-[var(--color-bg-raised)] border-y border-[var(--color-border-subtle)]"
+  >
+    <div class="container">
+
+      <div class="mb-12 flex justify-center">
+        <SectionHeader
+          eyebrow="By the Numbers"
+          heading="Results we're"
+          accent="proud of."
+          id="about-stats-heading"
+        />
+      </div>
+
+      <dl
+        class="grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-8"
+        data-reveal
+      >
+        {stats.map((stat, i) => (
+          <div
+            class="group flex flex-col items-center text-center p-6 rounded-xl
+                   border border-[var(--color-border-subtle)]
+                   bg-[var(--color-bg-base)]
+                   transition-all duration-300
+                   hover:border-[var(--color-border-strong)]
+                   hover:shadow-[var(--shadow-card-glow)]
+                   reveal-item"
+            style={`--delay:${i * 80}ms`}
+          >
+            <dt class="sr-only">{stat.label}</dt>
+            <dd
+              class="text-5xl font-black tracking-tight gradient-text lg:text-6xl"
+              data-about-stat-target={stat.value}
+              data-about-stat-suffix={stat.suffix}
+              aria-label={`${stat.value}${stat.suffix} ${stat.label}`}
+            >
+              0{stat.suffix}
+            </dd>
+            <p class="mt-3 text-sm font-semibold text-[var(--color-text-primary)]">
+              {stat.label}
+            </p>
+            <p class="mt-1 text-xs text-[var(--color-text-tertiary)]">
+              {stat.detail}
+            </p>
+          </div>
+        ))}
+      </dl>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       9 — CTA
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="about-cta"
+    aria-label="Start a project with CodiFlux"
+    class="section-padding relative overflow-hidden"
+  >
+    <!-- Background -->
+    <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+      <div class="absolute inset-0 dot-grid opacity-[0.012]"></div>
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[320px]
+               opacity-[0.09] blur-[100px]"
+        style="background: radial-gradient(ellipse at 50% 0%, #2563EB, transparent 70%);"
+      ></div>
+      <div
+        class="absolute top-0 left-0 right-0 h-px"
+        style="background: linear-gradient(90deg, transparent, rgba(37,99,235,0.18) 50%, transparent);"
+      ></div>
+    </div>
+
+    <div class="container relative z-10">
+      <div class="max-w-3xl mx-auto text-center" data-reveal>
+
+        <p class="mb-4 eyebrow reveal-item" style="--delay:0ms">
+          Ready to Build?
+        </p>
+
+        <h2
+          class="text-4xl font-bold tracking-[-0.025em] text-[var(--color-text-primary)]
+                 sm:text-5xl lg:text-6xl leading-[1.1] reveal-item"
+          style="--delay:80ms"
+        >
+          Let's Build Something<br />
+          <span class="gradient-text">Exceptional Together.</span>
+        </h2>
+
+        <p
+          class="mt-6 text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-xl mx-auto reveal-item"
+          style="--delay:160ms"
+        >
+          Whether you're launching a startup, scaling your business, or modernising
+          your digital presence — CodiFlux is ready to help.
+        </p>
+
+        <div
+          class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 reveal-item"
+          style="--delay:240ms"
+        >
+          <Button href="/contact" size="lg" id="about-cta-primary">
+            Start Your Project
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Button>
+          <Button href="/services" variant="ghost" size="lg" id="about-cta-services">
+            View Services
+          </Button>
+        </div>
+
+        <!-- Trust signals -->
+        <div
+          class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6
+                 text-xs text-[var(--color-text-tertiary)] reveal-item"
+          style="--delay:320ms"
+        >
+          {[
+            'Free initial consultation',
+            'Response within 24 hours',
+            'No long-term contracts',
+          ].map((signal) => (
+            <div class="flex items-center gap-2">
+              <svg
+                width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round"
+                class="text-[var(--color-accent-cyan)] opacity-70 shrink-0"
+                aria-hidden="true"
+              >
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              <span>{signal}</span>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</PageLayout>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Scroll-reveal + animated counters
+     IntersectionObserver only — zero external libraries.
+     Respects prefers-reduced-motion.
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Scroll Reveal ───────────────────────────────────────────── */
+  const prefersReducedMotion =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const target = entry.target as HTMLElement;
+            // Reveal all child [.reveal-item] elements with stagger
+            target.querySelectorAll<HTMLElement>('.reveal-item').forEach((el) => {
+              const delay = el.style.getPropertyValue('--delay') || '0ms';
+              el.style.animationDelay = delay;
+              el.classList.add('is-revealed');
+            });
+            revealObserver.unobserve(target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      revealObserver.observe(el);
+    });
+  } else {
+    // Reduced motion: reveal immediately
+    document.querySelectorAll('.reveal-item').forEach((el) => {
+      el.classList.add('is-revealed');
+    });
+  }
+
+  /* ── Animated Counters ───────────────────────────────────────── */
+  function animateAboutStat(el: Element) {
+    const target   = parseInt(el.getAttribute('data-about-stat-target') ?? '0', 10);
+    const suffix   = el.getAttribute('data-about-stat-suffix') ?? '';
+    const duration = 1600;
+    const start    = performance.now();
+
+    if (prefersReducedMotion) {
+      el.textContent = `${target}${suffix}`;
+      return;
+    }
+
+    function update(now: number) {
+      const elapsed  = Math.min(now - start, duration);
+      const progress = 1 - Math.pow(1 - elapsed / duration, 3);
+      const current  = Math.round(progress * target);
+      el.textContent = `${current}${suffix}`;
+      if (elapsed < duration) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = `${target}${suffix}`;
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  const statObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateAboutStat(entry.target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  document
+    .querySelectorAll('[data-about-stat-target]')
+    .forEach((el) => statObserver.observe(el));
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Page-scoped styles — reveal animation states only.
+     All design tokens come from global.css.
+     ═══════════════════════════════════════════════════════════════ -->
+<style>
+  /* Initial hidden state for reveal items */
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity  0.55s var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      transform 0.55s var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    transition-delay: var(--delay, 0ms);
+  }
+
+  /* Revealed state — triggered by JS adding .is-revealed to the parent [data-reveal] */
+  [data-reveal] .reveal-item.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
