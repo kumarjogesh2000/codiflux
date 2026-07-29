@@ -1,0 +1,395 @@
+---
+/**
+ * contact.astro — Contact Page (/contact)
+ *
+ * Dedicated Contact page reusing the existing ContactCTA component.
+ *
+ * Sections:
+ *   1. Hero              — Label + heading + description
+ *   2. Contact Methods   — 3 elegant cards (Email, Response Time, Location)
+ *   3. Contact Form      — Reuses ContactCTA component
+ *   4. Working Process   — Horizontal timeline
+ *   5. FAQ               — 5 concise questions using reused FAQ component
+ *   6. Final CTA         — Final conversion section
+ *
+ * Design: Dark Mode Cyber, minimal, elegant, performance-first.
+ * SEO: Full Open Graph, Twitter Card, canonical.
+ */
+
+import PageLayout from '@/layouts/PageLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import ContactCTA from '@/components/sections/ContactCTA.astro';
+import FAQ from '@/components/sections/FAQ.astro';
+import { SITE } from '@/lib/constants';
+
+// ─── Page SEO ─────────────────────────────────────────────────────────────────
+const pageTitle = 'Contact';
+const pageDescription =
+  "Whether you're planning a new website, custom software, AI integration, or performance improvements, we'd love to hear about your project.";
+const canonicalUrl = `${SITE.url}/contact`;
+const ogImage = '/og/og-contact.png';
+
+// ─── Contact Methods ──────────────────────────────────────────────────────────
+const contactMethods = [
+  {
+    icon: `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>`,
+    label: 'Email',
+    value: 'kumarjogesh2000@gmail.com',
+  },
+  {
+    icon: `<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>`,
+    label: 'Response Time',
+    value: 'Typically within one business day',
+  },
+  {
+    icon: `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>`,
+    label: 'Location',
+    value: 'Punjab, India (Available Worldwide)',
+  },
+] as const;
+
+// ─── Working Process ──────────────────────────────────────────────────────────
+const processSteps = [
+  'Share Your Idea',
+  'Discovery Discussion',
+  'Proposal',
+  'Development',
+  'Launch',
+  'Long-Term Support',
+] as const;
+
+// ─── FAQs ─────────────────────────────────────────────────────────────────────
+const contactFaqs = [
+  {
+    q: 'How quickly do you respond?',
+    a: 'We typically respond to all inquiries within one business day to discuss your project requirements.',
+  },
+  {
+    q: 'What technologies do you work with?',
+    a: 'We specialize in Astro, React, Next.js, Node.js, and popular CMS platforms like WordPress and Shopify.',
+  },
+  {
+    q: 'Do you work with international clients?',
+    a: 'Yes, we work with clients worldwide. We are accustomed to coordinating across different time zones.',
+  },
+  {
+    q: 'Can you redesign existing websites?',
+    a: 'Absolutely. We can modernize your existing website, improve its performance, and enhance its user experience.',
+  },
+  {
+    q: 'Do you provide long-term support?',
+    a: 'Yes, we offer ongoing maintenance and support to ensure your website continues to perform optimally after launch.',
+  },
+];
+---
+
+<PageLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={canonicalUrl}
+  ogImage={ogImage}
+>
+  <!-- ══════════════════════════════════════════════════════
+       1 — HERO
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="contact-hero"
+    aria-label="Contact CodiFlux"
+    class="relative pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden"
+  >
+    <!-- Ambient background -->
+    <div aria-hidden="true" class="absolute inset-0 pointer-events-none select-none">
+      <div
+        class="absolute -top-48 -left-48 w-[700px] h-[700px] rounded-full
+               opacity-[0.06] blur-[140px]"
+        style="background: radial-gradient(circle at 50% 50%, #2563EB, transparent 70%);"
+      ></div>
+      <div class="absolute inset-0 dot-grid opacity-[0.015]"></div>
+    </div>
+
+    <div class="container relative z-10 text-center" data-reveal>
+      <div class="max-w-3xl mx-auto">
+        <p class="mb-6 eyebrow reveal-item" style="--delay:0ms">
+          CONTACT
+        </p>
+
+        <h1
+          class="text-4xl font-bold leading-[1.1] tracking-[-0.025em]
+                 text-[var(--color-text-primary)]
+                 sm:text-5xl lg:text-6xl
+                 reveal-item"
+          style="--delay:80ms"
+        >
+          Let's Build Something <span class="gradient-text">Exceptional Together</span>
+        </h1>
+
+        <p
+          class="mt-6 text-lg leading-relaxed text-[var(--color-text-secondary)]
+                 sm:text-xl reveal-item"
+          style="--delay:160ms"
+        >
+          {pageDescription}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       2 — CONTACT METHODS
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="contact-methods"
+    aria-label="Contact Methods"
+    class="pb-24"
+  >
+    <div class="container">
+      <ul
+        class="grid grid-cols-1 md:grid-cols-3 gap-6"
+        role="list"
+        data-reveal
+      >
+        {contactMethods.map((method, i) => (
+          <li
+            class="group flex flex-col items-center text-center p-8 rounded-xl
+                   border border-[var(--color-border-subtle)]
+                   bg-[var(--color-bg-raised)]
+                   transition-all duration-300
+                   hover:-translate-y-1 hover:border-[var(--color-border-base)]
+                   hover:shadow-[var(--shadow-card-glow)]
+                   reveal-item"
+            style={`--delay:${i * 80}ms`}
+          >
+            <!-- Icon -->
+            <div
+              class="mb-5 flex items-center justify-center w-12 h-12 rounded-lg
+                     bg-[var(--color-bg-overlay)] border border-[var(--color-border-subtle)]
+                     group-hover:border-[var(--color-border-base)]
+                     group-hover:bg-[rgba(0,229,255,0.05)]
+                     transition-all duration-300"
+              aria-hidden="true"
+            >
+              <svg
+                width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor"
+                stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                class="text-[var(--color-accent-cyan)]"
+              >
+                <Fragment set:html={method.icon} />
+              </svg>
+            </div>
+
+            <h2 class="mb-2 text-sm font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)]">
+              {method.label}
+            </h2>
+            <p class="text-base font-medium text-[var(--color-text-primary)]">
+              {method.label === 'Email' ? (
+                <a
+                  href={`mailto:${method.value}`}
+                  class="hover:text-[var(--color-accent-cyan)] transition-colors duration-200"
+                >
+                  {method.value}
+                </a>
+              ) : (
+                method.value
+              )}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       3 — CONTACT FORM (Reused)
+       ══════════════════════════════════════════════════════ -->
+  <div data-reveal>
+    <div class="reveal-item" style="--delay:0ms">
+      <ContactCTA />
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       4 — WORKING PROCESS (Minimal horizontal timeline)
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="working-process"
+    aria-labelledby="working-process-heading"
+    class="section-padding bg-[var(--color-bg-raised)] border-y border-[var(--color-border-subtle)]"
+  >
+    <div class="container">
+      <div class="mb-16 flex justify-center">
+        <SectionHeader
+          eyebrow="Our Process"
+          heading="How we"
+          accent="work together."
+          id="working-process-heading"
+          subtext="A transparent and seamless process from initial contact to successful launch."
+        />
+      </div>
+
+      <div class="relative max-w-5xl mx-auto" data-reveal>
+        <!-- Horizontal connecting line (hidden on mobile) -->
+        <div
+          class="hidden md:block absolute top-1/2 left-0 right-0 h-px -translate-y-1/2 bg-[var(--color-border-subtle)]"
+          aria-hidden="true"
+        ></div>
+
+        <ul class="relative z-10 flex flex-col md:flex-row justify-between items-center md:items-start gap-8 md:gap-4">
+          {processSteps.map((step, i) => (
+            <li
+              class="flex flex-col items-center text-center reveal-item group"
+              style={`--delay:${i * 100}ms`}
+            >
+              <!-- Dot -->
+              <div
+                class="w-4 h-4 mb-4 rounded-full bg-[var(--color-bg-raised)] border-2 border-[var(--color-border-base)]
+                       group-hover:border-[var(--color-accent-cyan)] group-hover:bg-[var(--color-accent-cyan)] group-hover:shadow-[var(--shadow-glow-cyan)]
+                       transition-all duration-300 relative z-10"
+                aria-hidden="true"
+              ></div>
+              <!-- Label -->
+              <p class="text-sm font-medium text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)] transition-colors duration-300 max-w-[120px]">
+                {step}
+              </p>
+              
+              <!-- Arrow (visible on mobile only) -->
+              {i < processSteps.length - 1 && (
+                <div class="mt-8 md:hidden text-[var(--color-border-strong)]">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                  </svg>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       5 — FAQ
+       ══════════════════════════════════════════════════════ -->
+  <div data-reveal>
+    <div class="reveal-item" style="--delay:0ms">
+      <FAQ 
+        faqs={contactFaqs} 
+        eyebrow="Common Inquiries"
+        heading="Before we"
+        accent="start."
+        showCta={false} 
+      />
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       6 — FINAL CTA
+       ══════════════════════════════════════════════════════ -->
+  <section
+    id="contact-final-cta"
+    aria-label="Final CTA"
+    class="section-padding relative overflow-hidden bg-[var(--color-bg-base)] border-t border-[var(--color-border-subtle)]"
+  >
+    <!-- Background -->
+    <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+      <div class="absolute inset-0 dot-grid opacity-[0.012]"></div>
+      <div
+        class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[320px]
+               opacity-[0.06] blur-[100px]"
+        style="background: radial-gradient(ellipse at 50% 100%, #2563EB, transparent 70%);"
+      ></div>
+    </div>
+
+    <div class="container relative z-10">
+      <div class="max-w-3xl mx-auto text-center" data-reveal>
+
+        <h2
+          class="text-4xl font-bold tracking-[-0.025em] text-[var(--color-text-primary)]
+                 sm:text-5xl leading-[1.1] reveal-item"
+          style="--delay:0ms"
+        >
+          Ready to Start Your <span class="gradient-text">Next Project?</span>
+        </h2>
+
+        <p
+          class="mt-6 text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-xl mx-auto reveal-item"
+          style="--delay:80ms"
+        >
+          Let's create something fast, scalable and built for long-term success.
+        </p>
+
+        <div
+          class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 reveal-item"
+          style="--delay:160ms"
+        >
+          <Button href="/portfolio" size="lg" id="contact-final-portfolio">
+            View Portfolio
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Button>
+          <Button href="/" variant="ghost" size="lg" id="contact-final-home">
+            Back to Home
+          </Button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</PageLayout>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Scroll-reveal
+     IntersectionObserver only — zero external libraries.
+     Respects prefers-reduced-motion.
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+  const prefersReducedMotion =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const target = entry.target as HTMLElement;
+            target.querySelectorAll<HTMLElement>('.reveal-item').forEach((el) => {
+              const delay = el.style.getPropertyValue('--delay') || '0ms';
+              el.style.animationDelay = delay;
+              el.classList.add('is-revealed');
+            });
+            revealObserver.unobserve(target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      revealObserver.observe(el);
+    });
+  } else {
+    document.querySelectorAll('.reveal-item').forEach((el) => {
+      el.classList.add('is-revealed');
+    });
+  }
+</script>
+
+<style>
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity  0.55s var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+      transform 0.55s var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+    transition-delay: var(--delay, 0ms);
+  }
+
+  [data-reveal] .reveal-item.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>

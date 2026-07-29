@@ -8,7 +8,21 @@
  */
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 
-const faqs = [
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  faqs?: FaqItem[];
+  eyebrow?: string;
+  heading?: string;
+  accent?: string;
+  /** Whether to show the "Still have questions?" CTA at the bottom */
+  showCta?: boolean;
+}
+
+const defaultFaqs: FaqItem[] = [
   {
     q: 'What types of businesses do you work with?',
     a: 'We work with businesses of all sizes — from solo founders launching their first product to established agencies needing a white-label development partner. If you need a high-quality web presence, we can help.',
@@ -37,7 +51,15 @@ const faqs = [
     q: 'Do you help with SEO?',
     a: 'Every website we build includes technical SEO as standard — proper meta tags, canonical URLs, schema markup, sitemap, robots.txt, Core Web Vitals optimisation, and semantic HTML. Ongoing SEO campaigns are also available as a separate service.',
   },
-] as const;
+];
+
+const {
+  faqs = defaultFaqs,
+  eyebrow = "FAQ",
+  heading = "Questions we get",
+  accent = "a lot.",
+  showCta = true,
+} = Astro.props;
 ---
 
 <section
@@ -49,9 +71,9 @@ const faqs = [
 
     <div class="mb-12 flex justify-center">
       <SectionHeader
-        eyebrow="FAQ"
-        heading="Questions we get"
-        accent="a lot."
+        eyebrow={eyebrow}
+        heading={heading}
+        accent={accent}
         id="faq-heading"
       />
     </div>
@@ -101,19 +123,20 @@ const faqs = [
       ))}
     </dl>
 
-    <!-- Still have questions CTA -->
-    <div class="mt-10 text-center">
-      <p class="text-sm text-[var(--color-text-tertiary)]">
-        Still have questions?{' '}
-        <a
-          href="/contact"
-          class="text-[var(--color-accent-cyan)] hover:opacity-80 font-medium
-                 transition-opacity duration-200 underline underline-offset-2"
-        >
-          We're happy to chat.
-        </a>
-      </p>
-    </div>
+    {showCta && (
+      <div class="mt-10 text-center">
+        <p class="text-sm text-[var(--color-text-tertiary)]">
+          Still have questions?{' '}
+          <a
+            href="/contact"
+            class="text-[var(--color-accent-cyan)] hover:opacity-80 font-medium
+                   transition-opacity duration-200 underline underline-offset-2"
+          >
+            We're happy to chat.
+          </a>
+        </p>
+      </div>
+    )}
 
   </div>
 </section>
